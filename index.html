@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rhishinathvarma Marimuthu | Senior Offensive Security Engineer</title>
+  <title>Rhishinathvarma Marimuthu | Senior Offensive Security Engineer & Researcher</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
     :root {
-      --bg-space: #03060c;
-      --card-base: rgba(10, 16, 28, 0.65);
-      --border-cyan: rgba(0, 242, 254, 0.25);
+      --bg-space: #02050b;
+      --card-base: rgba(8, 14, 26, 0.78);
+      --border-cyan: rgba(0, 242, 254, 0.28);
       --neon-cyan: #00f2fe;
       --neon-blue: #4facfe;
       --neon-green: #00ff88;
       --neon-purple: #9d4edd;
+      --neon-red: #ff3366;
       --text-pure: #f8fafc;
       --text-dim: #94a3b8;
     }
@@ -36,11 +38,11 @@
       color: var(--text-pure);
       line-height: 1.65;
       overflow-x: hidden;
-      perspective: 1200px;
+      perspective: 1400px;
     }
 
-    /* Interactive 3D Cyber Grid Canvas */
-    #bg-canvas {
+    /* 3D WebGL Canvas Layer */
+    #three-canvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -50,20 +52,58 @@
       pointer-events: none;
     }
 
+    /* CRT Hacker Scanlines Screen Effect */
+    .crt-scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.6;
+    }
+
+    /* 3D Radar Grid Floor in Hero */
+    .cyber-grid-floor {
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%) rotateX(72deg);
+      width: 120%;
+      height: 450px;
+      background-image: 
+        linear-gradient(rgba(0, 242, 254, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.25) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 15%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 15%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+      animation: gridScan 18s linear infinite;
+    }
+
+    @keyframes gridScan {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 400px; }
+    }
+
     /* Fixed Navigation Bar */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(3, 6, 12, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+      background: rgba(3, 7, 15, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
       z-index: 1000;
       padding: 1rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s ease;
     }
 
     .nav-brand {
@@ -73,94 +113,90 @@
       color: var(--neon-cyan);
       text-decoration: none;
       letter-spacing: 1px;
-      text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
     }
 
-    .nav-brand span {
-      color: var(--neon-green);
-    }
+    .nav-brand span { color: var(--neon-green); }
 
     .nav-menu {
       display: flex;
-      gap: 1.8rem;
+      gap: 1.5rem;
+      align-items: center;
       list-style: none;
     }
 
     .nav-menu a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 500;
       transition: all 0.3s ease;
     }
 
     .nav-menu a:hover {
       color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+      text-shadow: 0 0 12px rgba(0, 242, 254, 0.7);
+    }
+
+    .btn-nav-cv {
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--neon-green) !important;
+      color: var(--neon-green) !important;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem !important;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-nav-cv:hover {
+      background: var(--neon-green) !important;
+      color: #02050b !important;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+      transform: translateY(-2px);
     }
 
     .container {
       max-width: 1180px;
       margin: 0 auto;
       padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
     }
 
-    /* 3D Animated Card Component with Specular Glare */
+    /* 3D Kinetic Tilt Card Engine */
     .tilt-card-3d {
       background: var(--card-base);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       border: 1px solid var(--border-cyan);
       border-radius: 14px;
       transform-style: preserve-3d;
       will-change: transform;
       transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.12s ease-out;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
     }
 
-    /* Dynamic Glare Reflection Overlay */
-    .tilt-card-3d::after {
-      content: '';
-      position: absolute;
-      top: var(--glare-y, -100%);
-      left: var(--glare-x, -100%);
-      width: 250px;
-      height: 250px;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.22) 0%, transparent 70%);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      border-radius: 50%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .tilt-card-3d:hover::after {
-      opacity: 1;
-    }
-
     .tilt-card-3d:hover {
       border-color: var(--neon-cyan);
-      box-shadow: 0 30px 65px rgba(0, 242, 254, 0.18), 0 0 25px rgba(0, 242, 254, 0.12);
+      box-shadow: 0 30px 70px rgba(0, 242, 254, 0.22), 0 0 30px rgba(0, 242, 254, 0.18);
     }
 
     .depth-layer {
-      transform: translateZ(40px);
+      transform: translateZ(45px);
       transform-style: preserve-3d;
     }
 
-    /* Floating Holographic 3D Animation */
     .float-3d {
-      animation: floatAnimation 4.5s ease-in-out infinite alternate;
+      animation: floatHologram 4.5s ease-in-out infinite alternate;
     }
 
-    @keyframes floatAnimation {
-      0% {
-        transform: translateY(0px) rotateY(0deg);
-      }
-      100% {
-        transform: translateY(-12px) rotateY(2deg);
-      }
+    @keyframes floatHologram {
+      0% { transform: translateY(0px) rotateY(0deg) rotateX(0deg); }
+      100% { transform: translateY(-14px) rotateY(4deg) rotateX(2deg); }
     }
 
     /* Hero Section */
@@ -171,6 +207,7 @@
       justify-content: center;
       padding-top: 6rem;
       padding-bottom: 4rem;
+      position: relative;
     }
 
     .hero-layout {
@@ -184,15 +221,15 @@
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      padding: 0.4rem 1rem;
+      padding: 0.45rem 1.1rem;
       background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.35);
+      border: 1px solid rgba(0, 242, 254, 0.4);
       border-radius: 50px;
       color: var(--neon-cyan);
       font-family: 'Fira Code', monospace;
       font-size: 0.82rem;
       margin-bottom: 1.2rem;
-      box-shadow: 0 0 18px rgba(0, 242, 254, 0.2);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
     }
 
     .radar-pulse {
@@ -210,7 +247,8 @@
       100% { transform: scale(0.95); opacity: 0.8; }
     }
 
-    h1 {
+    .glitch-text {
+      position: relative;
       font-family: 'Orbitron', sans-serif;
       font-size: 3.2rem;
       font-weight: 900;
@@ -218,11 +256,11 @@
       margin-bottom: 0.8rem;
     }
 
-    h1 span {
+    .glitch-text span {
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.35));
+      filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.4));
     }
 
     .hero-lead {
@@ -239,11 +277,28 @@
       line-height: 1.75;
     }
 
-    /* 3D Terminal Card */
     .terminal-3d {
       padding: 1.6rem;
       border-radius: 14px;
       font-family: 'Fira Code', monospace;
+      position: relative;
+    }
+
+    .terminal-3d::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.08), transparent);
+      animation: sweepScan 6s infinite;
+    }
+
+    @keyframes sweepScan {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
     }
 
     .term-dots {
@@ -254,11 +309,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .t-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
+    .t-dot { width: 12px; height: 12px; border-radius: 50%; }
     .t-red { background: #ff5f56; }
     .t-yellow { background: #ffbd2e; }
     .t-green { background: #27c93f; }
@@ -274,7 +325,6 @@
     .p-purple { color: var(--neon-purple); }
     .p-val { color: #f1f5f9; }
 
-    /* Metric Grid */
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -293,7 +343,7 @@
       font-weight: 900;
       color: var(--neon-cyan);
       margin-bottom: 0.3rem;
-      text-shadow: 0 0 18px rgba(0, 242, 254, 0.45);
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
     }
 
     .metric-label {
@@ -302,7 +352,6 @@
       font-weight: 500;
     }
 
-    /* Buttons */
     .btn-group {
       display: flex;
       gap: 1.2rem;
@@ -334,6 +383,19 @@
       box-shadow: 0 15px 35px rgba(0, 242, 254, 0.6);
     }
 
+    .btn-cv {
+      background: linear-gradient(135deg, var(--neon-green), #00b4d8);
+      color: #02050b;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 255, 136, 0.35);
+    }
+
+    .btn-cv:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 255, 136, 0.6);
+    }
+
     .btn-glass {
       border: 1px solid var(--border-cyan);
       color: var(--text-pure);
@@ -348,9 +410,7 @@
       box-shadow: 0 12px 28px rgba(0, 242, 254, 0.25);
     }
 
-    section {
-      padding: 6.5rem 0;
-    }
+    section { padding: 6.5rem 0; }
 
     .section-headline {
       font-family: 'Orbitron', sans-serif;
@@ -371,16 +431,14 @@
       margin-left: 1rem;
     }
 
-    /* Technical Skills Grid */
+    /* Skills Grid */
     .skills-grid-3d {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 1.8rem;
     }
 
-    .skill-card-3d {
-      padding: 2rem;
-    }
+    .skill-card-3d { padding: 2rem; }
 
     .skill-card-3d h3 {
       font-size: 1.15rem;
@@ -420,7 +478,7 @@
       transform: translateY(-2px) scale(1.04);
     }
 
-    /* Experience Timeline */
+    /* Timeline */
     .timeline-wrap {
       position: relative;
       border-left: 2px solid rgba(0, 242, 254, 0.25);
@@ -445,9 +503,7 @@
       box-shadow: 0 0 15px var(--neon-cyan);
     }
 
-    .timeline-box {
-      padding: 2.2rem;
-    }
+    .timeline-box { padding: 2.2rem; }
 
     .timeline-title-row {
       display: flex;
@@ -479,9 +535,7 @@
       border: 1px solid rgba(0, 255, 136, 0.25);
     }
 
-    .timeline-list {
-      list-style-type: none;
-    }
+    .timeline-list { list-style-type: none; }
 
     .timeline-list li {
       position: relative;
@@ -500,9 +554,7 @@
       font-weight: bold;
     }
 
-    .timeline-list li strong {
-      color: #f1f5f9;
-    }
+    .timeline-list li strong { color: #f1f5f9; }
 
     /* Certifications Grid */
     .certs-grid-3d {
@@ -551,63 +603,257 @@
       font-family: 'Fira Code', monospace;
     }
 
-    /* Honors & Achievements */
-    .honors-grid-3d {
+    .cert-link {
+      color: var(--neon-cyan);
+      font-size: 0.78rem;
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      display: inline-block;
+      margin-top: 0.3rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cert-link:hover {
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+      transform: translateX(2px);
+    }
+
+    /* 3D Gallery Grid (Media, Speakers & Hall of Fame) */
+    .media-gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1rem;
     }
 
-    .honor-box-3d {
-      padding: 2.2rem;
+    .media-card-3d {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .honor-box-3d h3 {
-      font-size: 1.25rem;
-      color: #ffffff;
-      margin-bottom: 1.2rem;
+    .media-thumb-wrap {
+      width: 100%;
+      height: 220px;
+      background: #040810;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      justify-content: center;
     }
 
-    .honor-box-3d h3 i {
-      color: #ffd700;
+    .media-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease, filter 0.4s ease;
     }
 
-    .honor-list {
-      list-style-type: none;
+    .media-card-3d:hover .media-thumb-wrap img {
+      transform: scale(1.08);
+      filter: brightness(1.1);
     }
 
-    .honor-list li {
-      position: relative;
-      padding-left: 1.6rem;
-      margin-bottom: 0.9rem;
-      color: var(--text-dim);
-      font-size: 0.93rem;
-      line-height: 1.65;
-    }
-
-    .honor-list li::before {
-      content: "✦";
+    .media-overlay {
       position: absolute;
-      left: 0;
-      color: var(--neon-cyan);
+      inset: 0;
+      background: rgba(0, 242, 254, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
-    .honor-list li strong {
-      color: #f1f5f9;
+    .media-thumb-wrap:hover .media-overlay { opacity: 1; }
+
+    .media-overlay i {
+      font-size: 2rem;
+      color: #fff;
+      filter: drop-shadow(0 0 10px var(--neon-cyan));
     }
 
-    /* Contact Section */
+    .media-card-body {
+      padding: 1.4rem;
+      flex: 1;
+    }
+
+    .media-card-body h4 {
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .media-card-body p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Lightbox Modal */
+    #image-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 5, 11, 0.95);
+      backdrop-filter: blur(15px);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    #image-lightbox.active { display: flex; }
+
+    #lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 0 45px rgba(0, 242, 254, 0.35);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2.5rem;
+      font-size: 2.5rem;
+      color: #fff;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .lightbox-close:hover { color: var(--neon-cyan); }
+
+    /* Contact Card & Table */
     .contact-card-3d {
-      padding: 4rem 2rem;
-      text-align: center;
-      max-width: 850px;
+      padding: 3.5rem 2.5rem;
+      max-width: 900px;
       margin: 0 auto;
     }
 
-    /* Footer */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .cyber-table-wrap {
+      background: rgba(3, 7, 15, 0.7);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cyber-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+    }
+
+    .cyber-table th {
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--neon-cyan);
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.25);
+    }
+
+    .cyber-table td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+    }
+
+    .cyber-table tr:last-child td { border-bottom: none; }
+
+    .cyber-table td.param {
+      color: var(--neon-blue);
+      font-weight: 600;
+      width: 35%;
+    }
+
+    .cyber-table td.val a {
+      color: var(--text-pure);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .cyber-table td.val a:hover {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+    }
+
+    .form-group { margin-bottom: 1.2rem; }
+
+    .form-group label {
+      display: block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: var(--neon-cyan);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(3, 7, 15, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.35), inset 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .form-control::placeholder { color: rgba(148, 163, 184, 0.45); }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      color: #02050b;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 242, 254, 0.35);
+    }
+
+    .btn-submit:hover {
+      box-shadow: 0 8px 30px rgba(0, 242, 254, 0.6);
+      transform: translateY(-2px);
+    }
+
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding: 2.5rem 0;
@@ -617,24 +863,23 @@
       background: #020408;
     }
 
-    footer span {
-      color: var(--neon-cyan);
-    }
+    footer span { color: var(--neon-cyan); }
 
     @media (max-width: 900px) {
       .hero-layout { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
       .metric-grid { grid-template-columns: repeat(2, 1fr); }
-      h1 { font-size: 2.4rem; }
+      .glitch-text { font-size: 2.4rem; }
       .nav-menu { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background 3D Cyber Grid Canvas -->
-  <canvas id="bg-canvas"></canvas>
+  <div class="crt-scanlines"></div>
+  <div id="three-canvas"></div>
 
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar with Instant CV Download -->
   <nav>
     <a href="#about" class="nav-brand">&lt;RM<span>_SEC</span> /&gt;</a>
     <ul class="nav-menu">
@@ -643,36 +888,42 @@
       <li><a href="#projects">Tools & Research</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#certifications">Certifications</a></li>
-      <li><a href="#honors">Honors & Leadership</a></li>
+      <li><a href="#media-honors">Media & Speaking</a></li>
+      <li><a href="#hall-of-fame">Hall of Fame</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="./Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-nav-cv"><i class="fas fa-file-download"></i> Download CV</a></li>
     </ul>
   </nav>
 
   <div class="container">
 
-    <!-- About / Hero Section -->
+    <!-- Hero Section -->
     <section id="about">
+      <div class="cyber-grid-floor"></div>
+
       <div class="hero-layout">
         <div class="hero-text-side">
           <div class="badge-3d">
             <span class="radar-pulse"></span> THREAT AUDIT ONLINE // OFFENSIVE SECURITY
           </div>
-          <h1>Rhishinathvarma <span>Marimuthu</span></h1>
+          <h1 class="glitch-text">Rhishinathvarma <span>Marimuthu</span></h1>
           <p class="hero-lead">Senior Offensive Security Engineer | OWASP Chapter Lead</p>
           <p class="hero-text">
-            Offensive Security Specialist with 5+ years of experience across Web & Mobile Application VAPT (iOS/Android), Secure Code Review (SAST/DAST), API Penetration Testing, AI-driven Security Tooling, and SIEM architectures. Ranked among the <strong>Top 15 Security Researchers in India</strong> by NCIIPC and officially commended by NASA, Government of India (300+ secured digital assets), and global government agencies.
+            Offensive Security Specialist with 5+ years of experience across Web & Mobile Application VAPT (iOS/Android), Secure Code Review (SAST/DAST), API Penetration Testing, AI-driven Security Tooling, and SIEM architectures. Ranked among the Top 15 Security Researchers in India by NCIIPC and officially commended by NASA, Government of India (300+ secured digital assets), and global government agencies.
           </p>
           <div class="btn-group">
-            <a href="mailto:rhishinathvarmamarimuthu@outlook.com" class="btn-3d btn-glow">
-              <i class="fas fa-paper-plane"></i> Initialize Contact
+            <a href="./Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-3d btn-cv">
+              <i class="fas fa-file-download"></i> Download Full CV
             </a>
-            <a href="https://linkedin.com/in/rhishinathvarmamarimuthu" target="_blank" class="btn-3d btn-glass">
+            <a href="#contact" class="btn-3d btn-glow">
+              <i class="fas fa-terminal"></i> Direct Message Channel
+            </a>
+            <a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank" class="btn-3d btn-glass">
               <i class="fab fa-linkedin-in"></i> LinkedIn Network
             </a>
           </div>
         </div>
 
-        <!-- Interactive 3D Terminal Card -->
         <div class="tilt-card-3d terminal-3d float-3d">
           <div class="depth-layer">
             <div class="term-dots">
@@ -697,7 +948,6 @@
         </div>
       </div>
 
-      <!-- Key Impact Statistics -->
       <div class="metric-grid">
         <div class="tilt-card-3d metric-box">
           <div class="depth-layer">
@@ -828,7 +1078,7 @@
       </div>
     </section>
 
-    <!-- Featured Research & Tooling Section (LinkedIn Enhanced) -->
+    <!-- Featured Research & Tooling Section -->
     <section id="projects">
       <h2 class="section-headline"><i class="fas fa-code-branch" style="color: var(--neon-cyan);"></i> Featured Security Tooling & Research</h2>
       <div class="skills-grid-3d">
@@ -863,17 +1113,21 @@
           </div>
         </div>
 
+        <!-- Google Hacking Database Section -->
         <div class="tilt-card-3d skill-card-3d">
           <div class="depth-layer">
-            <h3><i class="fas fa-search"></i> Google Hacking Database (GHDB)</h3>
+            <h3><i class="fas fa-search"></i> Google Hacking Database (GHDB-8073)</h3>
             <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.2rem;">
               Published author of recognized reconnaissance and OSINT dork signatures archived on Exploit-DB for identifying critical exposed attack surfaces.
             </p>
-            <div class="tag-cloud">
+            <div class="tag-cloud" style="margin-bottom: 0.8rem;">
               <span class="tech-pill">Exploit-DB</span>
-              <span class="tech-pill">GHDB Author</span>
-              <span class="tech-pill">Information Gathering</span>
+              <span class="tech-pill">GHDB-ID: 8073</span>
+              <span class="tech-pill">OSINT</span>
             </div>
+            <a onclick="openLightbox('./google%20hacking%20database%20author1.png')" class="cert-link">
+              <i class="fas fa-eye"></i> View GHDB Submission Proof
+            </a>
           </div>
         </div>
 
@@ -922,10 +1176,14 @@
                 <span class="date-badge">Apr 2023 – Jul 2025</span>
               </div>
               <ul class="timeline-list">
-                <li><strong>Client Engagements:</strong> Led end-to-end security assessments for 40+ web applications and 25+ mobile applications across FinTech, E-commerce, and enterprise B2C verticals with 100% on-time project delivery.</li>
-                <li><strong>SIEM & SOC Architecture:</strong> Engineered Wazuh SIEM log harvesting pipelines and centralized monitoring dashboards, substantially enhancing enterprise real-time threat visibility; delivered hands-on SIEM log monitoring training for international clients.</li>
-                <li><strong>Source Code Review:</strong> Executed Secure Code Reviews (SCR) across polyglot codebases (Java, Node.js, Python) and conducted realistic spear-phishing campaigns for 10+ corporate clients.</li>
-                <li><strong>Compliance & Cloud Audits:</strong> Conducted Threat Intelligence projects, SDK penetration testing, network configuration audits, SEBI regulatory compliance assessments, and cloud infrastructure posture evaluations.</li>
+                <li><strong>Client Engagements & Pentesting:</strong> Led end-to-end VAPT assessments for 40+ web applications and 25+ mobile applications across FinTech, Banking, and E-commerce domains; identified and remediated critical business logic flaws, IDORs, and race conditions with a 100% on-time delivery record.</li>
+                <li><strong>Mobile & API Security (iOS & Android):</strong> Conducted in-depth mobile application assessments using MobSF, Frida, Objection, and Burp Suite; successfully bypassed root/jailbreak detection, certificate pinning (SSL pinning), and resolved local data-at-rest leakage issues.</li>
+                <li><strong>SIEM, SOC & Threat Detection:</strong> Architected centralized Wazuh SIEM log collection pipelines, configured custom active-response rules, and tuned detection use cases across client endpoints and cloud servers, cutting mean time to detect (MTTD) by 35%.</li>
+                <li><strong>Corporate Threat Simulation & Phishing:</strong> Designed and executed custom spear-phishing campaigns, credential-harvesting simulations, and USB drop tests for 10+ enterprise clients, training over 500+ employees on social engineering defense.</li>
+                <li><strong>Secure Code Review (SCR):</strong> Audited polyglot enterprise codebases (Java, Python, Node.js) using static analysis tools and manual review to catch insecure deserialization, SQL injection, and cryptographic misconfigurations early in development cycles.</li>
+                <li><strong>SDK & Third-Party Auditing:</strong> Evaluated third-party payment and identity SDKs embedded within mobile applications, uncovering API key leakages and insecure IPC mechanisms before market release.</li>
+                <li><strong>Regulatory Compliance & Cloud Posture:</strong> Executed cloud configuration audits across AWS/Azure environments and ensured strict alignment with SEBI Cyber Security Framework, CERT-In guidelines, and ISO 27001 standards.</li>
+                <li><strong>Client Reporting & Executive Debriefs:</strong> Authored detailed vulnerability reports with proof-of-concept (PoC) exploit chains, severity ratings (CVSS v3), and actionable developer-level remediation code snippets for engineering teams and C-suite leadership.</li>
               </ul>
             </div>
           </div>
@@ -944,9 +1202,12 @@
                 <span class="date-badge">Feb 2022 – Apr 2023</span>
               </div>
               <ul class="timeline-list">
-                <li><strong>Offensive Security:</strong> Executed vulnerability assessments and penetration tests for web and mobile applications under OWASP, NIST, and PTES standards.</li>
-                <li><strong>Firewall & SOC Integration:</strong> Configured and tuned Fortinet FortiGate 40F firewalls, integrating security telemetry with Wazuh for centralized SOC L2/L3 security operations.</li>
-                <li><strong>Workshops & Training:</strong> Delivered hands-on firewall administration training and organized cyber hygiene workshops for client engineering teams.</li>
+                <li><strong>Offensive Security Assessments:</strong> Performed black-box, gray-box, and white-box vulnerability assessments and manual penetration tests across enterprise web apps and RESTful APIs, adhering strictly to OWASP Top 10, NIST CSF, and PTES frameworks.</li>
+                <li><strong>Network Vulnerability Management:</strong> Conducted internal and external network infrastructure scans using Nessus, Nmap, and OpenVAS; hardened active directories, segmented vulnerable subnets, and remediated critical misconfigurations.</li>
+                <li><strong>Firewall Engineering & Hardening:</strong> Configured, deployed, and managed Fortinet FortiGate 40F next-gen firewalls (NGFW); implemented strict IPsec/SSL VPN policies, intrusion prevention system (IPS) rules, and web filtering to block zero-day telemetry.</li>
+                <li><strong>SOC L2/L3 Integration:</strong> Streamlined firewall security alerts and network traffic telemetry into open-source SIEM solutions (Wazuh/ELK stack) to enable real-time anomaly detection and incident triage.</li>
+                <li><strong>Client Workshops & Cyber Hygiene:</strong> Facilitated technical knowledge transfer sessions on secure network architecture, password policies, and defensive patch management for client system administrators and developers.</li>
+                <li><strong>Remediation Verification & Retesting:</strong> Conducted comprehensive retests post-patching to validate that all reported critical and high vulnerabilities were effectively neutralized without introducing regression bugs.</li>
               </ul>
             </div>
           </div>
@@ -955,61 +1216,89 @@
       </div>
     </section>
 
-    <!-- Industry Certifications -->
+    <!-- Industry Certifications Section -->
     <section id="certifications">
       <h2 class="section-headline"><i class="fas fa-certificate" style="color: var(--neon-cyan);"></i> Industry Certifications</h2>
       <div class="certs-grid-3d">
         
+        <!-- CEH -->
         <div class="tilt-card-3d cert-item-3d">
           <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-shield-virus"></i></div>
+            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CEH.jpg')"><i class="fas fa-shield-virus"></i></div>
             <div class="cert-details">
               <h4>CEH v11</h4>
               <p>Certified Ethical Hacker • EC-Council</p>
+              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: ECC4531789062</span>
+              <a onclick="openLightbox('./CEH.jpg')" class="cert-link">
+                <i class="fas fa-eye"></i> View Certificate
+              </a>
             </div>
           </div>
         </div>
 
+        <!-- eMAPT -->
         <div class="tilt-card-3d cert-item-3d">
           <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./eMAPT.jpg')"><i class="fas fa-mobile-alt"></i></div>
             <div class="cert-details">
               <h4>eMAPT</h4>
-              <p>Mobile App Penetration Tester • eLearnSecurity</p>
+              <p>Mobile App Penetration Tester • eLearnSecurity / INE</p>
+              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: 143337663</span>
+              <a onclick="openLightbox('./eMAPT.jpg')" class="cert-link">
+                <i class="fas fa-eye"></i> View Certificate
+              </a>
             </div>
           </div>
         </div>
 
+        <!-- CRTA -->
         <div class="tilt-card-3d cert-item-3d">
           <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-network-wired"></i></div>
-            <div class="cert-details">
-              <h4>API-RTA</h4>
-              <p>API Red Team Analyst • CyberWarFare Labs</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-user-ninja"></i></div>
+            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CRTA.pdf')"><i class="fas fa-user-ninja"></i></div>
             <div class="cert-details">
               <h4>CRTA</h4>
               <p>Certified Red Team Analyst • CyberWarFare Labs</p>
+              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: CRTA-695e4ebb823d7631cc46a6a9</span>
+              <a onclick="openLightbox('./CRTA.pdf')" class="cert-link">
+                <i class="fas fa-file-pdf"></i> View PDF Certificate
+              </a>
             </div>
           </div>
         </div>
 
+        <!-- API-RTA -->
         <div class="tilt-card-3d cert-item-3d">
           <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-tasks"></i></div>
+            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./API%20RTA.pdf')"><i class="fas fa-network-wired"></i></div>
             <div class="cert-details">
-              <h4>CRTOM</h4>
-              <p>Red Team Operations Management • CWL</p>
+              <h4>API-RTA</h4>
+              <p>API Red Team Analyst • CyberWarFare Labs</p>
+              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: API-RTA-695b9349823d7631cc459f96</span>
+              <a onclick="openLightbox('./API%20RTA.pdf')" class="cert-link">
+                <i class="fas fa-file-pdf"></i> View PDF Certificate
+              </a>
             </div>
           </div>
         </div>
 
+        <!-- CRTOM -->
+        <div class="tilt-card-3d cert-item-3d">
+          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
+            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CRTOM.pdf')"><i class="fas fa-tasks"></i></div>
+            <div class="cert-details">
+              <h4>CRTOM</h4>
+              <p>Red Team Operations Management • Red Team Leaders</p>
+              <a href="https://courses.redteamleaders.com/exam-completion/bc2012344eff211d" target="_blank" class="cert-link">
+                <i class="fas fa-external-link-alt"></i> Verify Credential
+              </a>
+              <a onclick="openLightbox('./CRTOM.pdf')" class="cert-link" style="margin-left: 10px;">
+                <i class="fas fa-file-pdf"></i> View PDF
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CCIO -->
         <div class="tilt-card-3d cert-item-3d">
           <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
             <div class="cert-badge-icon"><i class="fas fa-balance-scale"></i></div>
@@ -1023,163 +1312,545 @@
       </div>
     </section>
 
-    <!-- Honors & Community Leadership -->
-    <section id="honors">
-      <h2 class="section-headline"><i class="fas fa-trophy" style="color: var(--neon-cyan);"></i> Key Achievements & Community Leadership</h2>
-      <div class="honors-grid-3d">
+    <!-- Visual Media, Speaking & Keynotes Showcase -->
+    <section id="media-honors">
+      <h2 class="section-headline"><i class="fas fa-microphone-alt" style="color: var(--neon-cyan);"></i> Keynote Talks & Media Features</h2>
+      <div class="media-gallery-grid">
         
-        <div class="tilt-card-3d honor-box-3d">
-          <div class="depth-layer">
-            <h3><i class="fas fa-landmark"></i> Hall of Fame & Commendations</h3>
-            <ul class="honor-list">
-              <li><strong>National Research Recognition:</strong> Ranked among the Top 15 Security Researchers in India by NCIIPC (Govt. of India).</li>
-              <li><strong>300+ Portals Secured:</strong> Protected Indian Government infrastructure (TNSTC, Bank of Baroda, Punjab & Sindh Bank, national identity infrastructures, and Income Tax systems) with 100+ formal acknowledgments.</li>
-              <li><strong>Global Honors:</strong> Commended with official Letters of Appreciation and Hall of Fame honors from NASA, Government of USA, and Government of Australia.</li>
-              <li><strong>Enterprise Research & Bounties:</strong> Credited in Hall of Fame programs of Lenovo, Drexel University, Inflectra, ACT, and Techieegy; awarded $20,000+ in private mobile bug bounty programs (Penta bug).</li>
-            </ul>
+        <!-- Sri Krishna College - Keynote 1 -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Sri%20krishna%20engineering%20collge%20Speaker1.jpg')">
+            <img src="./Sri%20krishna%20engineering%20collge%20Speaker1.jpg" alt="HackZen 26 Hackathon Judge & Speaker" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-award" style="color: var(--neon-cyan);"></i> HackZen'26 Keynote & Jury</h4>
+            <p>Keynote Speaker & Hackathon Judge at Sri Krishna College of Engineering & Technology.</p>
           </div>
         </div>
 
-        <div class="tilt-card-3d honor-box-3d">
-          <div class="depth-layer">
-            <h3><i class="fas fa-users"></i> Community & Keynote Speaking</h3>
-            <ul class="honor-list">
-              <li><strong>OWASP Salem Chapter Leader:</strong> Direct regional chapter operations, organizing technical meetups and AppSec webinars for 1,000+ professionals and students.</li>
-              <li><strong>Guest Speaker:</strong> Delivered technical lectures on Cloud Attacks, Threat Intelligence, and API Security at VIT Chennai, Christ University (Foober 9.0), Rajalakshmi Institute of Technology, and CSI Coimbatore Chapter.</li>
-              <li><strong>Hackathon Judge:</strong> Technical Judge for Evolve 2.0 (RIT Chennai) and Hack Zen Hackathon 2026 (judging 400+ students).</li>
-              <li><strong>Publications & Media:</strong> Author in Google Hacking Database (GHDB), writer on Medium, and featured in @lamdil responsible disclosure interviews.</li>
-            </ul>
+        <!-- Sri Krishna College - Awards 2 -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Sri%20krishna%20engineering%20collge%20Speaker2.jpg')">
+            <img src="./Sri%20krishna%20engineering%20collge%20Speaker2.jpg" alt="HackZen 26 Valedictory ceremony" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-trophy" style="color: #ffd700;"></i> HackZen'26 Awards Ceremony</h4>
+            <p>Felicitating winning teams and presenting cybersecurity honors at SKCET.</p>
+          </div>
+        </div>
+
+        <!-- RIT Keynote - Threat Intel 1 -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./RIT%20speaker1.jpg')">
+            <img src="./RIT%20speaker1.jpg" alt="RIT Chennai Threat Intel Keynote" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-alt" style="color: var(--neon-blue);"></i> RIT Threat Intelligence</h4>
+            <p>Keynote lecture on Threat Intelligence architectures & real-world Red Teaming.</p>
+          </div>
+        </div>
+
+        <!-- RIT Felicitation Memento 2 -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./RIT%20speaker2.jpg')">
+            <img src="./RIT%20speaker2.jpg" alt="RIT Chennai Memento Felicitation" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-award" style="color: #ffd700;"></i> RIT Faculty Felicitation</h4>
+            <p>Honored with the institutional memento for delivering guest lectures on offensive security.</p>
+          </div>
+        </div>
+
+        <!-- Christ University - FOOBAR 9.0 (1) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Christ%20speaker1.jpg')">
+            <img src="./Christ%20speaker1.jpg" alt="Christ University Speaker" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-university" style="color: var(--neon-purple);"></i> Christ University FOOBAR 9.0</h4>
+            <p>Keynote addressing application security & threat hunting at FOOBAR 9.0.</p>
+          </div>
+        </div>
+
+        <!-- Christ University - Android Components (2) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Christ%20speaker2.jpg')">
+            <img src="./Christ%20speaker2.jpg" alt="Christ University Android Lecture" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fab fa-android" style="color: var(--neon-green);"></i> Android Security Architecture</h4>
+            <p>Deep-dive lecture breaking down core Android components & exploitation vectors.</p>
+          </div>
+        </div>
+
+        <!-- Social Media Company / Theneer Idaivelai (1) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./speaker%20at%20the%20social%20media%20company1.jpg')">
+            <img src="./speaker%20at%20the%20social%20media%20company1.jpg" alt="Corporate Cyber Training" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-users" style="color: var(--neon-green);"></i> Enterprise Phishing Defense</h4>
+            <p>Conducting corporate threat simulation & social engineering awareness.</p>
+          </div>
+        </div>
+
+        <!-- Social Media Company / Theneer Idaivelai (2) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./speaker%20at%20the%20social%20media%20company2.jpg')">
+            <img src="./speaker%20at%20the%20social%20media%20company2.jpg" alt="Theneer Idaivelai Security Workshop" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-virus" style="color: var(--neon-cyan);"></i> Theneer Idaivelai Security Team</h4>
+            <p>Delivering cybersecurity hygiene & data protection workshops to media production squads.</p>
+          </div>
+        </div>
+
+        <!-- Yugam 2026 Spotlight Talk -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./yugam%20speaker1.jpg')">
+            <img src="./yugam%20speaker1.jpg" alt="Yugam 2026 Speaker" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-microphone" style="color: var(--neon-green);"></i> Yugam 2026 Spotlight Talk</h4>
+            <p>Speaker on "Mastering Android Application Security" at Kumaraguru Campus.</p>
+          </div>
+        </div>
+
+        <!-- Hack Tamil YouTube Feature -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Featured%20in%20youtube%20.jpg')">
+            <img src="./Featured%20in%20youtube%20.jpg" alt="Hack Tamil Featured" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fab fa-youtube" style="color: var(--neon-red);"></i> Hack Tamil (Season 3)</h4>
+            <p>Featured interview discussing ethical disclosure & securing TN Govt & NASA assets.</p>
+          </div>
+        </div>
+
+        <!-- Vetri Tech Media Coverage -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Vetritec%20speaker%202.jpg')">
+            <img src="./Vetritec%20speaker%202.jpg" alt="Press Media Feature" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-newspaper" style="color: var(--neon-cyan);"></i> Press Recognition</h4>
+            <p>Newspaper feature honoring P1 security findings across TN Govt infrastructure & NASA.</p>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Comprehensive Hall of Fame & Official Appreciation Showcase -->
+    <section id="hall-of-fame">
+      <h2 class="section-headline"><i class="fas fa-trophy" style="color: var(--neon-cyan);"></i> Hall of Fame & Commendations</h2>
+      <div class="media-gallery-grid">
+        
+        <!-- Top 15 NCIIPC India -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Top%2015%20Researcher%20of%20NCIIP%20of%20India.jpg')">
+            <img src="./Top%2015%20Researcher%20of%20NCIIP%20of%20India.jpg" alt="NCIIPC Top 15 Researcher" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-medal" style="color: var(--neon-green);"></i> Top 15 Researcher (NCIIPC)</h4>
+            <p>Ranked among India's top 15 critical infrastructure cybersecurity researchers.</p>
+          </div>
+        </div>
+
+        <!-- NASA Hall of Fame & Letter -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./NASA%20Hall%20of%20fame.png')">
+            <img src="./NASA%20Hall%20of%20fame.png" alt="NASA Hall of Fame" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-rocket" style="color: var(--neon-cyan);"></i> NASA Hall of Fame</h4>
+            <p>Inducted into NASA's Vulnerability Disclosure Program (VDP) under alias 'blackparrot'.</p>
+            <a onclick="openLightbox('./NASA%20Appreciation%20Letter.pdf')" class="cert-link">
+              <i class="fas fa-file-pdf"></i> View NASA Appreciation Letter
+            </a>
+          </div>
+        </div>
+
+        <!-- USA Gov (DHS & DOC) Appreciation -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./USA%20gov%20Appreciation%20mail%201.png')">
+            <img src="./USA%20gov%20Appreciation%20mail%201.png" alt="USA Gov DHS Appreciation" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-flag-usa" style="color: var(--neon-blue);"></i> US Government (DHS & DOC)</h4>
+            <p>Official commendation for securing national network infrastructure via the DHS & DOC VDP.</p>
+            <a onclick="openLightbox('./USA%20gov%20Appreciation%20mail.jpg')" class="cert-link">
+              <i class="fas fa-eye"></i> View Dept of Commerce Letter
+            </a>
+          </div>
+        </div>
+
+        <!-- Australian Government Department of Health -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Australia%20gov%20appreciation%20mail.jpg')">
+            <img src="./Australia%20gov%20appreciation%20mail.jpg" alt="Australia Gov Appreciation" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-globe-asia" style="color: var(--neon-cyan);"></i> Australian Government</h4>
+            <p>Recognized by the Department of Health for responsible vulnerability disclosure.</p>
+          </div>
+        </div>
+
+        <!-- Zerodha Hall of Fame -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Zerodha%20hall%20of%20fame.png')">
+            <img src="./Zerodha%20hall%20of%20fame.png" alt="Zerodha Hall of Fame" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-chart-line" style="color: var(--neon-green);"></i> Zerodha Hall of Fame</h4>
+            <p>Ranked #35 in the Zerodha Bug Bounty Program for securing FinTech trading infrastructure.</p>
+          </div>
+        </div>
+
+        <!-- Drexel University Hall of Fame & Appreciation -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Drexel%20University%20Hall%20of%20fame.jpg')">
+            <img src="./Drexel%20University%20Hall%20of%20fame.jpg" alt="Drexel University Hall of Fame" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-university" style="color: var(--neon-purple);"></i> Drexel University</h4>
+            <p>Recognized in 2024 Hall of Fame & official Letter of Appreciation from the CISO.</p>
+            <a onclick="openLightbox('./Drexel%20University%20letter%20of%20appreciation.pdf')" class="cert-link">
+              <i class="fas fa-file-pdf"></i> View Official Letter
+            </a>
+          </div>
+        </div>
+
+        <!-- Lenovo Letter of Appreciation -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Lenovo%20Letter%20of%20Appreciation.pdf')">
+            <img src="./Lenovo%20Letter%20of%20Appreciation.pdf" alt="Lenovo Certificate of Appreciation" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-laptop-code" style="color: var(--neon-blue);"></i> Lenovo PSIRT Commendation</h4>
+            <p>Official Certificate of Appreciation for responsible reporting on product security.</p>
+            <a onclick="openLightbox('./Lenovo%20Letter%20of%20Appreciation.pdf')" class="cert-link">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Techieegy Hall of Fame -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Techieegy%20Hall%20of%20fame.png')">
+            <img src="./Techieegy%20Hall%20of%20fame.png" alt="Techieegy Hall of Fame" />
+            <div class="media-overlay"><i class="fas fa-shield-alt" style="color: var(--neon-green);"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-alt" style="color: var(--neon-green);"></i> Techieegy Hall of Fame</h4>
+            <p>Listed among top researchers for discovering and reporting web vulnerabilities.</p>
+          </div>
+        </div>
+
+        <!-- Inflectra Hall of Fame -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./Inflectra%20Hall%20of%20Fame.png')">
+            <img src="./Inflectra%20Hall%20of%20Fame.png" alt="Inflectra Hall of Fame" />
+            <div class="media-overlay"><i class="fas fa-award" style="color: #ffd700;"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-award" style="color: #ffd700;"></i> Inflectra Hall of Fame</h4>
+            <p>Listed in responsible disclosures acknowledgments for protecting customer data assets.</p>
+          </div>
+        </div>
+
+        <!-- ACT Bug Bounty Appreciation -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./ACT%20letter%20of%20appreciation.pdf')">
+            <img src="./ACT%20letter%20of%20appreciation.pdf" alt="ACT Bug Bounty Appreciation" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-alt" style="color: var(--neon-red);"></i> ACT Fibernet Bug Bounty</h4>
+            <p>Certificate of appreciation awarded for cybersecurity research protecting network infrastructure.</p>
+            <a onclick="openLightbox('./ACT%20letter%20of%20appreciation.pdf')" class="cert-link">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Critical RCE in TN Govt -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightbox('./RCE%20in%20tn%20gov.png')">
+            <img src="./RCE%20in%20tn%20gov.png" alt="RCE in TN Govt" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-terminal" style="color: var(--neon-red);"></i> Critical RCE Disclosure</h4>
+            <p>Discovered and responsibly disclosed Remote Code Execution (RCE) flaws in TN Govt infrastructure.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Contact Table & Form Section -->
     <section id="contact">
       <div class="tilt-card-3d contact-card-3d">
         <div class="depth-layer">
-          <div class="badge-3d">INITIATE CONNECTION</div>
-          <h2 style="font-family: 'Orbitron', sans-serif; font-size: 2.3rem; margin-bottom: 1rem; color: #fff;">Get In Touch</h2>
-          <p style="color: var(--text-dim); max-width: 600px; margin: 0 auto 2.2rem; font-size: 1.05rem;">
-            Available for Application Security assessments, red team consulting, enterprise VAPT, AI offensive tooling architectures, or keynote speaking.
+          <div class="badge-3d"><span class="radar-pulse"></span> INITIATE SECURE CONNECTION</div>
+          <h2 style="font-family: 'Orbitron', sans-serif; font-size: 2.3rem; margin-bottom: 0.8rem; color: #fff;">Contact Me</h2>
+          <p style="color: var(--text-dim); max-width: 650px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+            Submit your message through the encrypted form below. Messages dispatch directly to my inbox.
           </p>
-          <div class="btn-group" style="justify-content: center;">
-            <a href="mailto:rhishinathvarmamarimuthu@outlook.com" class="btn-3d btn-glow">
-              <i class="fas fa-paper-plane"></i> Send Direct Email
-            </a>
-            <a href="https://linkedin.com/in/rhishinathvarmamarimuthu" target="_blank" class="btn-3d btn-glass">
-              <i class="fab fa-linkedin-in"></i> Connect on LinkedIn
-            </a>
+
+          <div class="contact-grid">
+            <!-- Contact Info Cyber Table -->
+            <div>
+              <div class="cyber-table-wrap">
+                <table class="cyber-table">
+                  <thead>
+                    <tr>
+                      <th colspan="2">TRANSMISSION CHANNEL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="param">AGENT</td>
+                      <td class="val">Rhishinathvarma Marimuthu</td>
+                    </tr>
+                    <tr>
+                      <td class="param">EMAIL</td>
+                      <td class="val"><a href="mailto:rhishinathvarma@outlook.com">rhishinathvarma@outlook.com</a></td>
+                    </tr>
+                    <tr>
+                      <td class="param">NETWORK</td>
+                      <td class="val"><a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank">linkedin.com/in/rhishinathvarma-marimuthu</a></td>
+                    </tr>
+                    <tr>
+                      <td class="param">STATUS</td>
+                      <td class="val" style="color: var(--neon-green);">ENCRYPTED & READY</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Direct Mail Forwarding Form -->
+            <div>
+              <form action="https://formsubmit.co/rhishinathvarma@outlook.com" method="POST">
+                <input type="hidden" name="_subject" value="New Security Inquiry from Portfolio!">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+
+                <div class="form-group">
+                  <label for="name">NAME</label>
+                  <input type="text" id="name" name="Name" class="form-control" placeholder="John Doe" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="email">EMAIL</label>
+                  <input type="email" id="email" name="Email" class="form-control" placeholder="john@domain.com" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="phone">PHONE NUMBER</label>
+                  <input type="tel" id="phone" name="Phone" class="form-control" placeholder="+91 98765 43210" />
+                </div>
+
+                <div class="form-group">
+                  <label for="message">MESSAGE</label>
+                  <textarea id="message" name="Message" class="form-control" rows="3" placeholder="Describe the VAPT scope or inquiry..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                  <i class="fas fa-terminal"></i> TRANSMIT PAYLOAD
+                </button>
+              </form>
+            </div>
           </div>
+
         </div>
       </div>
     </section>
 
   </div>
 
+  <!-- Lightbox Modal Component (Images + PDF Document Previews) -->
+  <div id="image-lightbox" onclick="closeLightbox(event)">
+    <span class="lightbox-close">&times;</span>
+    <div id="lightbox-container" style="max-width: 90vw; max-height: 85vh; display: flex; align-items: center; justify-content: center;">
+      <img id="lightbox-img" src="" alt="Enlarged View" style="display: none;" />
+      <div id="lightbox-pdf-view" style="display: none; background: #080e1a; padding: 2.5rem; border-radius: 12px; border: 1px solid var(--neon-cyan); text-align: center; max-width: 500px;">
+        <i class="fas fa-file-pdf" style="font-size: 4.5rem; color: var(--neon-red); margin-bottom: 1.2rem;"></i>
+        <h3 id="lightbox-pdf-title" style="color: #fff; margin-bottom: 0.8rem; font-family: 'Orbitron', sans-serif;">Official Security Document</h3>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; font-family: 'Fira Code', monospace;">This official verification is archived as a secure document.</p>
+        <a id="lightbox-pdf-link" href="" target="_blank" download class="btn-3d btn-glow" style="display: inline-flex;">
+          <i class="fas fa-download"></i> Open / Download PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <p>© 2026 <span>Rhishinathvarma Marimuthu</span>. Built & Hosted with GitHub Pages.</p>
   </footer>
 
-  <!-- 3D Interactive Canvas & Tilt Engine Script -->
   <script>
-    // 1. Dynamic 3D Particle Mesh Canvas Animation
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
-    const mouse = { x: null, y: null, radius: 150 };
+    const pdfPlaceholderSvg = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%23080e1a%22%20width%3D%22600%22%20height%3D%22400%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M270%20130%20h45%20l25%2025%20v85%20h-70%20z%22%20fill%3D%22none%22%20stroke%3D%22%23ff3366%22%20stroke-width%3D%223%22%2F%3E%3Ctext%20x%3D%22300%22%20y%3D%22270%22%20fill%3D%22%2300f2fe%22%20font-family%3D%22monospace%22%20font-size%3D%2216%22%20text-anchor%3D%22middle%22%20font-weight%3D%22bold%22%3E%5B%20OFFICIAL%20DOCUMENT%20%5D%3C%2Ftext%3E%3Ctext%20x%3D%22300%22%20y%3D%22295%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22monospace%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%3EClick%20to%20preview%20%26%20download%3C%2Ftext%3E%3C%2Fsvg%3E";
 
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+    document.querySelectorAll('.media-thumb-wrap img').forEach(img => {
+      const src = img.getAttribute('src');
+      if (src && src.toLowerCase().includes('.pdf')) {
+        img.src = pdfPlaceholderSvg;
+      }
+      img.onerror = function() {
+        this.src = pdfPlaceholderSvg;
+      };
+    });
+
+    function openLightbox(src) {
+      const modal = document.getElementById('image-lightbox');
+      const modalImg = document.getElementById('lightbox-img');
+      const pdfView = document.getElementById('lightbox-pdf-view');
+      const pdfLink = document.getElementById('lightbox-pdf-link');
+      const pdfTitle = document.getElementById('lightbox-pdf-title');
+
+      if (src.toLowerCase().includes('.pdf')) {
+        modalImg.style.display = 'none';
+        pdfView.style.display = 'block';
+        pdfLink.href = src;
+        const decodedName = decodeURIComponent(src.replace(/^(\.\/|\/)/, ''));
+        pdfTitle.innerText = decodedName.replace(/\.[^/.]+$/, "");
+      } else {
+        pdfView.style.display = 'none';
+        modalImg.style.display = 'block';
+        modalImg.src = src;
+      }
+      modal.classList.add('active');
     }
-    window.addEventListener('resize', resize);
-    resize();
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.8;
-        this.vy = (Math.random() - 0.5) * 0.8;
-        this.radius = Math.random() * 2 + 1;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > width) this.vx = -this.vx;
-        if (this.y < 0 || this.y > height) this.vy = -this.vy;
-
-        if (mouse.x !== null) {
-          let dx = mouse.x - this.x;
-          let dy = mouse.y - this.y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < mouse.radius) {
-            let angle = Math.atan2(dy, dx);
-            let force = (mouse.radius - dist) / mouse.radius;
-            this.x -= Math.cos(angle) * force * 3;
-            this.y -= Math.sin(angle) * force * 3;
-          }
-        }
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 242, 254, 0.45)';
-        ctx.fill();
+    function closeLightbox(e) {
+      if (e.target.id === 'image-lightbox' || e.target.classList.contains('lightbox-close')) {
+        document.getElementById('image-lightbox').classList.remove('active');
       }
     }
 
-    function initParticles() {
-      particles = [];
-      const count = Math.floor((width * height) / 12000);
-      for (let i = 0; i < count; i++) {
-        particles.push(new Particle());
-      }
+    const container = document.getElementById('three-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.z = 800;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const particleCount = 700;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    const cyanColor = new THREE.Color('#00f2fe');
+    const purpleColor = new THREE.Color('#9d4edd');
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 1600;
+      positions[i + 1] = (Math.random() - 0.5) * 1600;
+      positions[i + 2] = (Math.random() - 0.5) * 1600;
+
+      const mixedColor = Math.random() > 0.6 ? purpleColor : cyanColor;
+      colors[i] = mixedColor.r;
+      colors[i + 1] = mixedColor.g;
+      colors[i + 2] = mixedColor.b;
     }
-    initParticles();
-    window.addEventListener('resize', initParticles);
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const canvasPoint = document.createElement('canvas');
+    canvasPoint.width = 16;
+    canvasPoint.height = 16;
+    const ctxPoint = canvasPoint.getContext('2d');
+    const gradient = ctxPoint.createRadialGradient(8, 8, 0, 8, 8, 8);
+    gradient.addColorStop(0, 'rgba(255,255,255,1)');
+    gradient.addColorStop(0.4, 'rgba(0,242,254,0.8)');
+    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+    ctxPoint.fillStyle = gradient;
+    ctxPoint.fillRect(0, 0, 16, 16);
+
+    const pTexture = new THREE.CanvasTexture(canvasPoint);
+
+    const material = new THREE.PointsMaterial({
+      size: 14,
+      vertexColors: true,
+      map: pTexture,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const particleSystem = new THREE.Points(geometry, material);
+    scene.add(particleSystem);
+
+    const polyGeo = new THREE.IcosahedronGeometry(380, 1);
+    const polyMat = new THREE.MeshBasicMaterial({
+      color: 0x00f2fe,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.08
+    });
+    const icosahedron = new THREE.Mesh(polyGeo, polyMat);
+    scene.add(icosahedron);
+
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
 
     window.addEventListener('mousemove', e => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouseX = (e.clientX - windowHalfX) * 0.4;
+      mouseY = (e.clientY - windowHalfY) * 0.4;
     });
 
-    window.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
+    function renderThree() {
+      targetX += (mouseX - targetX) * 0.04;
+      targetY += (mouseY - targetY) * 0.04;
 
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
+      particleSystem.rotation.y += 0.001;
+      particleSystem.rotation.x += 0.0005;
 
-        for (let j = i + 1; j < particles.length; j++) {
-          let dx = particles[i].x - particles[j].x;
-          let dy = particles[i].y - particles[j].y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
+      icosahedron.rotation.y += 0.002;
+      icosahedron.rotation.x += 0.0015;
 
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 242, 254, ${0.25 * (1 - dist / 110)})`;
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animate);
+      camera.position.x += (targetX - camera.position.x) * 0.05;
+      camera.position.y += (-targetY - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderThree);
     }
-    animate();
+    renderThree();
 
-    // 2. Interactive 3D Multi-Axis Tilt + Dynamic Specular Lighting
     document.querySelectorAll('.tilt-card-3d').forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
@@ -1192,8 +1863,6 @@
         const rotateY = ((x - centerX) / centerX) * 15;
 
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.02, 1.02, 1.02)`;
-        card.style.setProperty('--glare-x', `${x}px`);
-        card.style.setProperty('--glare-y', `${y}px`);
       });
 
       card.addEventListener('mouseleave', () => {
