@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rhishinathvarma Marimuthu | Senior Offensive Security Engineer & Researcher</title>
   
-  <!-- Security Headers (Defense-in-Depth) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://formsubmit.co 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https://formsubmit.co;">
+  <!-- Security Headers (Defense-in-Depth with explicit script-src) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://formsubmit.co 'unsafe-inline' 'unsafe-eval'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https://formsubmit.co;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -52,7 +52,6 @@
       color: var(--text-pure);
       line-height: 1.65;
       overflow-x: hidden;
-      perspective: 1400px;
     }
 
     /* Ambient Cyber Glow Background */
@@ -63,23 +62,27 @@
       width: 100vw;
       height: 100vh;
       background: 
-        radial-gradient(circle at 15% 20%, rgba(0, 242, 254, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 75%, rgba(157, 78, 221, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 60%);
+        radial-gradient(circle at 15% 20%, rgba(0, 242, 254, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(157, 78, 221, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.06) 0%, transparent 60%);
       z-index: -2;
       pointer-events: none;
     }
 
-    /* 3D WebGL Background Canvas */
-    #three-canvas {
+    /* 3D WebGL Nvidia-Style Particle Container */
+    #three-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 0;
-      display: block;
+      z-index: -1;
       pointer-events: none;
+    }
+    #three-container canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     /* CRT Scanlines Overlay */
@@ -908,11 +911,22 @@
       text-align: center;
     }
 
-    /* Obsidian AI Assistant Floating Widget */
+    /* Obsidian AI Assistant Floating Widget Container (Strictly pinned to bottom-right viewport) */
+    #obsidian-chatbot-wrapper {
+      position: fixed !important;
+      bottom: 25px !important;
+      right: 25px !important;
+      left: auto !important;
+      top: auto !important;
+      z-index: 999999 !important;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 15px;
+      pointer-events: auto;
+    }
+
     #obsidian-chat-toggler {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
       width: 60px;
       height: 60px;
       background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
@@ -924,7 +938,6 @@
       font-size: 1.5rem;
       cursor: pointer;
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
-      z-index: 2000;
       transition: all 0.3s ease;
       border: 1px solid #fff;
     }
@@ -936,9 +949,6 @@
 
     #obsidian-chat-box {
       display: none;
-      position: fixed;
-      bottom: 5.5rem;
-      right: 2rem;
       width: 360px;
       height: 480px;
       background: rgba(3, 7, 15, 0.96);
@@ -946,13 +956,12 @@
       border: 1px solid var(--neon-cyan);
       border-radius: 14px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 242, 254, 0.2);
-      z-index: 2000;
       flex-direction: column;
       overflow: hidden;
       font-family: 'Fira Code', monospace;
     }
 
-    #obsidian-chat-box.active { display: flex; }
+    #obsidian-chat-box.active { display: flex !important; }
 
     .chat-header {
       background: rgba(0, 242, 254, 0.12);
@@ -1077,7 +1086,8 @@
 
   <div class="cyber-bg-glow"></div>
   <div class="crt-scanlines"></div>
-  <canvas id="three-canvas"></canvas>
+  <!-- Nvidia-Style 3D Fluid Particle Container -->
+  <div id="three-container"></div>
 
   <!-- Fixed Navigation -->
   <nav>
@@ -1486,7 +1496,7 @@
         <!-- API-RTA -->
         <div class="tilt-card-3d media-card-3d">
           <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
-            <img src="./API%20RTA_2.png" alt="API-RTA Certificate" onerror="handleImgError(this)" />
+            <img src="./Awards and achievments/API%20RTA_2.jpg" alt="API-RTA Certificate" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1696,7 +1706,7 @@
       </div>
     </section>
 
-    <!-- Comprehensive Hall of Fame & Official Appreciation Showcase (Explicitly using URL-encoded JPG for ACT) -->
+    <!-- Comprehensive Hall of Fame & Official Appreciation Showcase -->
     <section id="hall-of-fame">
       <h2 class="section-headline"><i class="fas fa-trophy" style="color: var(--neon-cyan);"></i> Hall of Fame & Commendations</h2>
       <div class="media-gallery-grid">
@@ -1809,7 +1819,7 @@
           </div>
         </div>
 
-        <!-- ACT Bug Bounty Appreciation (Explicit URL-encoded JPG matching uploaded format) -->
+        <!-- ACT Bug Bounty Appreciation -->
         <div class="tilt-card-3d media-card-3d">
           <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
             <img src="./ACT%20appreciation%20letter.jpg" alt="ACT Bug Bounty Appreciation" onerror="handleImgError(this)" />
@@ -1840,7 +1850,7 @@
         <div class="tilt-card-3d media-card-3d">
           <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
             <img src="./Inflectra Hall of Fame.png" alt="Inflectra Hall of Fame" onerror="handleImgError(this)" />
-            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+            <div class="media-overlay"><i class="fas fa-award" style="color: #ffd700;"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-award" style="color: #ffd700;"></i> Inflectra Hall of Fame</h4>
@@ -1926,12 +1936,18 @@
 
               <div class="form-group">
                 <label for="phone"><i class="fas fa-phone-alt"></i> PHONE NUMBER (E.G. +91 9876543210)</label>
-                <input type="tel" id="phone" name="Phone" class="form-control" placeholder="+91 9876543210" pattern="^\+?[0-9\s\-\(\)]{10,15}$" required title="Please enter a valid phone number (10-15 digits, optional + prefix)" />
+                <input type="tel" id="phone" name="Phone" class="form-control" placeholder="+91 7402664313" pattern="^\+?[0-9\s\-\(\)]{10,15}$" required title="Please enter a valid phone number (10-15 digits, optional + prefix)" />
               </div>
 
               <div class="form-group">
                 <label for="message"><i class="fas fa-terminal"></i> MESSAGE PAYLOAD</label>
                 <textarea id="message" name="Message" class="form-control" rows="3" placeholder="Describe the VAPT scope or inquiry..." required></textarea>
+              </div>
+
+              <!-- Security Challenge CAPTCHA -->
+              <div class="form-group">
+                <label for="captcha-input"><i class="fas fa-robot"></i> SECURITY CAPTCHA: WHAT IS <span id="captcha-question" style="color: var(--neon-cyan);"></span>?</label>
+                <input type="text" id="captcha-input" class="form-control" placeholder="Enter numerical answer" required />
               </div>
 
               <!-- DPDPA Compliance Consent Checkbox -->
@@ -1965,22 +1981,23 @@
     </div>
   </div>
 
-  <!-- Obsidian AI Assistant Floating Widget -->
-  <div id="obsidian-chat-toggler" onclick="toggleChatbot()" title="Ask Obsidian AI">
-    <i class="fas fa-gem"></i>
-  </div>
-
-  <div id="obsidian-chat-box">
-    <div class="chat-header">
-      <span><i class="fas fa-gem"></i> Obsidian AI Assistant</span>
-      <span style="cursor: pointer;" onclick="toggleChatbot()">&times;</span>
+  <!-- Obsidian AI Assistant Floating Widget Container (Strictly pinned to bottom-right viewport) -->
+  <div id="obsidian-chatbot-wrapper">
+    <div id="obsidian-chat-box">
+      <div class="chat-header">
+        <span><i class="fas fa-gem"></i> Obsidian AI Assistant</span>
+        <span style="cursor: pointer;" onclick="toggleChatbot()">&times;</span>
+      </div>
+      <div class="chat-body" id="chat-messages">
+        <div class="chat-msg bot">System online. I am Obsidian, Rhishinathvarma's intelligent security assistant. Ask me anything about his offensive security background, certifications, or education!</div>
+      </div>
+      <div class="chat-footer">
+        <input type="text" id="chat-input-field" class="chat-input" placeholder="Ask Obsidian..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+        <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+      </div>
     </div>
-    <div class="chat-body" id="chat-messages">
-      <div class="chat-msg bot">System online. I am Obsidian, Rhishinathvarma's intelligent security assistant. Ask me anything about his offensive security background, certifications, or education!</div>
-    </div>
-    <div class="chat-footer">
-      <input type="text" id="chat-input-field" class="chat-input" placeholder="Ask Obsidian..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
-      <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+    <div id="obsidian-chat-toggler" onclick="toggleChatbot()" title="Ask Obsidian AI">
+      <i class="fas fa-gem"></i>
     </div>
   </div>
 
@@ -2010,7 +2027,20 @@
       if (localStorage.getItem('cookie_consent')) {
         document.getElementById('cookie-banner').style.display = 'none';
       }
+      initCaptcha();
     });
+
+    // CAPTCHA Challenge Generation (Self-regenerating)
+    let captchaCorrectAnswer = 0;
+    function initCaptcha() {
+      const num1 = Math.floor(Math.random() * 10) + 1;
+      const num2 = Math.floor(Math.random() * 10) + 1;
+      captchaCorrectAnswer = num1 + num2;
+      const qSpan = document.getElementById('captcha-question');
+      if (qSpan) {
+        qSpan.innerText = `${num1} + ${num2}`;
+      }
+    }
 
     // Obsidian AI Assistant Intelligent Intent Engine
     function toggleChatbot() {
@@ -2071,7 +2101,7 @@
       });
     }
 
-    // Hardened Asynchronous Form Handler with DPDPA Consent
+    // Hardened Asynchronous Form Handler with CAPTCHA & WhatsApp Forward Option
     async function handleSecureSubmit(e) {
       e.preventDefault();
       const form = document.getElementById('secure-contact-form');
@@ -2080,6 +2110,14 @@
       
       const honey = form.elements['_honey'].value;
       if (honey) return;
+
+      const userCaptchaVal = parseInt(document.getElementById('captcha-input').value.trim(), 10);
+      if (userCaptchaVal !== captchaCorrectAnswer) {
+        alert('Incorrect CAPTCHA answer. Please solve the math challenge correctly.');
+        initCaptcha();
+        document.getElementById('captcha-input').value = '';
+        return;
+      }
 
       const consent = document.getElementById('dpdpa-consent').checked;
       if (!consent) {
@@ -2093,7 +2131,7 @@
       const message = sanitize(form.elements['Message'].value.trim());
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENCRYPTING & TRANSMITTING...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING & TRANSMITTING...';
       status.style.display = 'none';
 
       if (window.location.protocol === 'file:') {
@@ -2106,6 +2144,8 @@
         status.style.color = 'var(--neon-cyan)';
         status.style.border = '1px solid var(--neon-cyan)';
         status.innerHTML = '[✓] Local file mode detected. Dispatching payload via local mail client...';
+        initCaptcha();
+        document.getElementById('captcha-input').value = '';
         return;
       }
 
@@ -2128,13 +2168,14 @@
 
         if (response.ok) {
           form.reset();
+          initCaptcha();
           btn.disabled = false;
           btn.innerHTML = '<i class="fas fa-check-circle"></i> TRANSMITTED';
           status.style.display = 'block';
           status.style.background = 'rgba(0, 255, 136, 0.15)';
           status.style.color = 'var(--neon-green)';
           status.style.border = '1px solid var(--neon-green)';
-          status.innerHTML = '[✓] SUCCESS: Payload encrypted and delivered to Rhishinathvarma.';
+          status.innerHTML = '[✓] SUCCESS: Payload delivered! <br><a href="https://wa.me/917402664313?text=' + encodeURIComponent(`New Inquiry from ${name} (${phone}): ${message}`) + '" target="_blank" rel="noopener noreferrer" style="color: var(--neon-cyan); text-decoration: underline; font-weight: bold;"><i class="fab fa-whatsapp"></i> Click here to forward a copy to WhatsApp</a>';
         } else {
           throw new Error('Network response not ok');
         }
@@ -2150,10 +2191,12 @@
         status.onclick = function() {
           window.location.href = `mailto:rhishinathvarma@outlook.com?subject=Security%20Inquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`;
         };
+        initCaptcha();
+        document.getElementById('captcha-input').value = '';
       }
     }
 
-    // Comprehensive Auto-Discovery Image Fallback Engine (Resolves JPG/PNG/JPEG across all variants)
+    // Comprehensive Auto-Discovery Image Fallback Engine
     function handleImgError(img) {
       if (!img.dataset.attempt) img.dataset.attempt = "0";
       let attempt = parseInt(img.dataset.attempt);
@@ -2164,8 +2207,8 @@
       
       let explicitMap = {
         'CRTA': ['CRTA_2.png', 'CRTA_2.jpg', 'CRTA.png', 'CRTA.jpg'],
-        'API': ['API RTA_2.png', 'API RTA_2.jpg', 'API%20RTA_2.png', 'API%20RTA_2.jpg', 'APIRTA_2.png', 'APIRTA.png', 'API-RTA.png', 'apirta.png', 'api rta_2.png', 'API RTA_2.jpeg'],
-        'ACT': ['ACT appreciation letter.jpg', 'ACT appreciation letter.png', 'ACT appreciation letter_2.jpg', 'ACT appreciation letter_2.png', 'ACT%20appreciation%20letter.jpg', 'ACT%20appreciation%20letter_2.jpg', 'ACT.jpg', 'ACT.png']
+        'API': ['API RTA_2.jpg', 'API RTA.jpg', 'API%20RTA_2.jpg', 'API%20RTA.jpg', 'API RTA.png', 'API%20RTA.png', 'APIRTA_2.jpg', 'APIRTA.jpg', 'API-RTA.jpg', 'apirta.jpg'],
+        'ACT': ['ACT appreciation letter.jpg', 'ACT appreciation letter.png', 'ACT%20appreciation%20letter.jpg', 'ACT appreciation letter_2.jpg', 'ACT appreciation letter_2.png', 'ACT.jpg', 'ACT.png']
       };
 
       let matchedKey = Object.keys(explicitMap).find(k => cleanName.toUpperCase().includes(k));
@@ -2273,59 +2316,70 @@
       });
     });
 
-    // 3D WebGL Background Particle Engine
-    (function runThreeWebGL() {
+    // Nvidia-Style Fluid Particle Wave 3D Animation Engine
+    (function runNvidiaParticles() {
       function initEngine() {
-        const container = document.getElementById('three-canvas');
+        const container = document.getElementById('three-container');
         if (!container || typeof THREE === 'undefined') return;
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 2000);
-        camera.position.z = 750;
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+        camera.position.set(0, 350, 700);
+        camera.lookAt(0, 0, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        const particleCount = 850;
+        // Fluid Wave Particle Grid Parameters
+        const rows = 70;
+        const cols = 70;
+        const spacing = 35;
+        const count = rows * cols;
+
         const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
 
         const colorCyan = new THREE.Color('#00f2fe');
-        const colorPurple = new THREE.Color('#9d4edd');
+        const colorGreen = new THREE.Color('#00ff88');
         const colorBlue = new THREE.Color('#4facfe');
 
-        for (let i = 0; i < particleCount * 3; i += 3) {
-          positions[i] = (Math.random() - 0.5) * 1700;
-          positions[i + 1] = (Math.random() - 0.5) * 1700;
-          positions[i + 2] = (Math.random() - 0.5) * 1700;
+        let index = 0;
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const x = (i - rows / 2) * spacing;
+            const z = (j - cols / 2) * spacing;
+            positions[index] = x;
+            positions[index + 1] = 0;
+            positions[index + 2] = z;
 
-          const rand = Math.random();
-          const chosen = rand > 0.6 ? colorPurple : (rand > 0.3 ? colorCyan : colorBlue);
-          colors[i] = chosen.r;
-          colors[i + 1] = chosen.g;
-          colors[i + 2] = chosen.b;
+            colors[index] = colorCyan.r;
+            colors[index + 1] = colorCyan.g;
+            colors[index + 2] = colorCyan.b;
+            index += 3;
+          }
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
+        // Soft particle texture
         const pCanvas = document.createElement('canvas');
-        pCanvas.width = 16;
-        pCanvas.height = 16;
+        pCanvas.width = 32;
+        pCanvas.height = 32;
         const ctx = pCanvas.getContext('2d');
-        const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
         grad.addColorStop(0, 'rgba(255,255,255,1)');
-        grad.addColorStop(0.4, 'rgba(0,242,254,0.8)');
+        grad.addColorStop(0.3, 'rgba(0,242,254,0.8)');
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 16, 16);
+        ctx.fillRect(0, 0, 32, 32);
 
         const pTexture = new THREE.CanvasTexture(pCanvas);
         const pMaterial = new THREE.PointsMaterial({
-          size: 16,
+          size: 10,
           vertexColors: true,
           map: pTexture,
           transparent: true,
@@ -2333,63 +2387,46 @@
           depthWrite: false
         });
 
-        const particles = new THREE.Points(geometry, pMaterial);
-        scene.add(particles);
-
-        const coreGeo = new THREE.IcosahedronGeometry(380, 1);
-        const coreMat = new THREE.MeshBasicMaterial({
-          color: 0x00f2fe,
-          wireframe: true,
-          transparent: true,
-          opacity: 0.28
-        });
-        const cyberCore = new THREE.Mesh(coreGeo, coreMat);
-        scene.add(cyberCore);
-
-        const ringGeo = new THREE.TorusGeometry(480, 1.5, 16, 100);
-        const ringMat = new THREE.MeshBasicMaterial({
-          color: 0x9d4edd,
-          wireframe: true,
-          transparent: true,
-          opacity: 0.3
-        });
-        const cyberRing = new THREE.Mesh(ringGeo, ringMat);
-        cyberRing.rotation.x = Math.PI / 3;
-        scene.add(cyberRing);
+        const particleField = new THREE.Points(geometry, pMaterial);
+        scene.add(particleField);
 
         let mouseX = 0, mouseY = 0;
-        let targetX = 0, targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        window.addEventListener('mousemove', function(e) {
-          mouseX = (e.clientX - windowHalfX) * 0.35;
-          mouseY = (e.clientY - windowHalfY) * 0.35;
+        window.addEventListener('mousemove', (e) => {
+          mouseX = (e.clientX - window.innerWidth / 2) * 0.5;
+          mouseY = (e.clientY - window.innerHeight / 2) * 0.5;
         });
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', () => {
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
           renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
+        let clock = new THREE.Clock();
+
         function animate() {
           requestAnimationFrame(animate);
+          const elapsedTime = clock.getElapsedTime();
 
-          targetX += (mouseX - targetX) * 0.035;
-          targetY += (mouseY - targetY) * 0.035;
+          const posAttr = geometry.attributes.position;
+          let i = 0;
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const x = posAttr.getX(i);
+              const z = posAttr.getZ(i);
+              
+              // Nvidia CUDA-style fluid wave mathematical formula
+              const y = Math.sin(r * 0.3 + elapsedTime * 2.0) * 45 + Math.cos(c * 0.3 + elapsedTime * 1.5) * 45;
+              posAttr.setY(i, y);
+              i++;
+            }
+          }
+          posAttr.needsUpdate = true;
 
-          particles.rotation.y += 0.0008;
-          particles.rotation.x += 0.0004;
-
-          cyberCore.rotation.y += 0.0018;
-          cyberCore.rotation.x += 0.0012;
-
-          cyberRing.rotation.z += 0.002;
-
-          camera.position.x += (targetX - camera.position.x) * 0.05;
-          camera.position.y += (-targetY - camera.position.y) * 0.05;
-          camera.lookAt(scene.position);
+          particleField.rotation.y = elapsedTime * 0.08;
+          camera.position.x += (mouseX - camera.position.x) * 0.05;
+          camera.position.y += (-mouseY - camera.position.y + 350) * 0.05;
+          camera.lookAt(0, 0, 0);
 
           renderer.render(scene, camera);
         }
