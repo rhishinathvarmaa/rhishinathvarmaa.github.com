@@ -5,16 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rhishinathvarma Marimuthu | Senior Offensive Security Engineer & Researcher</title>
   
+  <!-- Security Headers (Defense-in-Depth) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://formsubmit.co 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https://formsubmit.co;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <!-- Typography & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js 3D WebGL Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
     :root {
       --bg-space: #02050b;
-      --card-base: rgba(8, 14, 26, 0.78);
+      --card-base: rgba(8, 14, 26, 0.88);
       --border-cyan: rgba(0, 242, 254, 0.28);
       --neon-cyan: #00f2fe;
       --neon-blue: #4facfe;
@@ -32,27 +41,48 @@
       scroll-behavior: smooth;
     }
 
+    html {
+      background-color: var(--bg-space);
+      overflow-x: hidden;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-space);
+      background: transparent;
       color: var(--text-pure);
       line-height: 1.65;
       overflow-x: hidden;
       perspective: 1400px;
     }
 
-    /* 3D WebGL Canvas Layer */
+    /* Ambient Cyber Glow Background */
+    .cyber-bg-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(0, 242, 254, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(157, 78, 221, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 60%);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* 3D WebGL Background Canvas */
     #three-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: -1;
+      z-index: 0;
+      display: block;
       pointer-events: none;
     }
 
-    /* CRT Hacker Scanlines Screen Effect */
+    /* CRT Scanlines Overlay */
     .crt-scanlines {
       position: fixed;
       top: 0;
@@ -64,10 +94,10 @@
       background-size: 100% 3px, 6px 100%;
       pointer-events: none;
       z-index: 999;
-      opacity: 0.6;
+      opacity: 0.35;
     }
 
-    /* 3D Radar Grid Floor in Hero */
+    /* 3D Cyber Grid Floor */
     .cyber-grid-floor {
       position: absolute;
       bottom: -60px;
@@ -82,7 +112,7 @@
       mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 15%, transparent 75%);
       -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 15%, transparent 75%);
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
       animation: gridScan 18s linear infinite;
     }
 
@@ -91,12 +121,12 @@
       100% { background-position: 0 400px; }
     }
 
-    /* Fixed Navigation Bar */
+    /* Navigation */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(3, 7, 15, 0.92);
+      background: rgba(3, 7, 15, 0.94);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(0, 242, 254, 0.2);
       z-index: 1000;
@@ -163,10 +193,10 @@
       margin: 0 auto;
       padding: 0 1.5rem;
       position: relative;
-      z-index: 1;
+      z-index: 10;
     }
 
-    /* 3D Kinetic Tilt Card Engine */
+    /* 3D Kinetic Tilt Cards */
     .tilt-card-3d {
       background: var(--card-base);
       backdrop-filter: blur(18px);
@@ -175,18 +205,18 @@
       transform-style: preserve-3d;
       will-change: transform;
       transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.12s ease-out;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       position: relative;
       overflow: hidden;
     }
 
     .tilt-card-3d:hover {
       border-color: var(--neon-cyan);
-      box-shadow: 0 30px 70px rgba(0, 242, 254, 0.22), 0 0 30px rgba(0, 242, 254, 0.18);
+      box-shadow: 0 30px 70px rgba(0, 242, 254, 0.25), 0 0 30px rgba(0, 242, 254, 0.18);
     }
 
     .depth-layer {
-      transform: translateZ(45px);
+      transform: translateZ(35px);
       transform-style: preserve-3d;
     }
 
@@ -431,51 +461,94 @@
       margin-left: 1rem;
     }
 
-    /* Skills Grid */
-    .skills-grid-3d {
+    /* Cyber Warfare Technical Arsenal Grid */
+    .hud-skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
     }
 
-    .skill-card-3d { padding: 2rem; }
+    .hud-card {
+      padding: 2.2rem 1.8rem;
+      position: relative;
+    }
 
-    .skill-card-3d h3 {
-      font-size: 1.15rem;
-      margin-bottom: 1.2rem;
-      color: var(--text-pure);
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+      padding-bottom: 0.8rem;
+    }
+
+    .hud-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      color: #fff;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.75rem;
+      font-weight: 700;
     }
 
-    .skill-card-3d h3 i {
-      color: var(--neon-cyan);
-      font-size: 1.25rem;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-    }
-
-    .tech-pill {
-      background: rgba(3, 6, 12, 0.75);
-      border: 1px solid rgba(0, 242, 254, 0.15);
-      color: #cbd5e1;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+    .hud-tag {
       font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.25);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    .hud-badges-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(3, 7, 16, 0.75);
+      border: 1px solid rgba(0, 242, 254, 0.14);
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
       transition: all 0.25s ease;
     }
 
-    .tech-pill:hover {
-      color: var(--neon-cyan);
+    .hud-item:hover {
       border-color: var(--neon-cyan);
       background: rgba(0, 242, 254, 0.1);
-      transform: translateY(-2px) scale(1.04);
+      transform: translateX(4px);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+
+    .hud-item-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.84rem;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .hud-item-name i {
+      color: var(--neon-cyan);
+      font-size: 0.95rem;
+      width: 18px;
+      text-align: center;
+    }
+
+    .hud-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
     }
 
     /* Timeline */
@@ -556,70 +629,7 @@
 
     .timeline-list li strong { color: #f1f5f9; }
 
-    /* Certifications Grid */
-    .certs-grid-3d {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.6rem;
-    }
-
-    .cert-item-3d {
-      padding: 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 1.3rem;
-    }
-
-    .cert-badge-icon {
-      font-size: 1.8rem;
-      color: var(--neon-purple);
-      background: rgba(157, 78, 221, 0.12);
-      width: 55px;
-      height: 55px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      border: 1px solid rgba(157, 78, 221, 0.3);
-      flex-shrink: 0;
-      transition: all 0.3s ease;
-    }
-
-    .cert-item-3d:hover .cert-badge-icon {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
-    }
-
-    .cert-details h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 0.2rem;
-    }
-
-    .cert-details p {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      font-family: 'Fira Code', monospace;
-    }
-
-    .cert-link {
-      color: var(--neon-cyan);
-      font-size: 0.78rem;
-      text-decoration: none;
-      font-family: 'Fira Code', monospace;
-      display: inline-block;
-      margin-top: 0.3rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .cert-link:hover {
-      text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
-      transform: translateX(2px);
-    }
-
-    /* 3D Gallery Grid (Media, Speakers & Hall of Fame) */
+    /* Media & Certificates Cards */
     .media-gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -697,13 +707,29 @@
       font-family: 'Fira Code', monospace;
     }
 
-    /* Lightbox Modal */
+    .cert-link {
+      color: var(--neon-cyan);
+      font-size: 0.78rem;
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      display: inline-block;
+      margin-top: 0.3rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cert-link:hover {
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+      transform: translateX(2px);
+    }
+
+    /* Lightbox Modal (Strictly Centered & Responsive) */
     #image-lightbox {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(2, 5, 11, 0.95);
-      backdrop-filter: blur(15px);
+      background: rgba(2, 5, 11, 0.96);
+      backdrop-filter: blur(16px);
       z-index: 3000;
       align-items: center;
       justify-content: center;
@@ -712,31 +738,49 @@
 
     #image-lightbox.active { display: flex; }
 
-    #lightbox-img {
+    #lightbox-container {
       max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    #lightbox-img {
+      max-width: 88vw;
       max-height: 85vh;
-      border-radius: 8px;
+      object-fit: contain;
+      border-radius: 10px;
       border: 1px solid var(--neon-cyan);
-      box-shadow: 0 0 45px rgba(0, 242, 254, 0.35);
+      box-shadow: 0 0 50px rgba(0, 242, 254, 0.4);
+      cursor: zoom-in;
     }
 
     .lightbox-close {
-      position: absolute;
+      position: fixed;
       top: 1.5rem;
       right: 2.5rem;
       font-size: 2.5rem;
       color: #fff;
       cursor: pointer;
       transition: color 0.2s;
+      z-index: 3001;
     }
 
     .lightbox-close:hover { color: var(--neon-cyan); }
 
     /* Contact Card & Table */
-    .contact-card-3d {
+    .contact-card-static {
+      background: var(--card-base);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--border-cyan);
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       padding: 3.5rem 2.5rem;
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
+      position: relative;
     }
 
     .contact-grid {
@@ -854,6 +898,160 @@
       transform: translateY(-2px);
     }
 
+    #form-status {
+      margin-top: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      display: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    /* Obsidian AI Assistant Floating Widget */
+    #obsidian-chat-toggler {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      color: #02050b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+      z-index: 2000;
+      transition: all 0.3s ease;
+      border: 1px solid #fff;
+    }
+
+    #obsidian-chat-toggler:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.8);
+    }
+
+    #obsidian-chat-box {
+      display: none;
+      position: fixed;
+      bottom: 5.5rem;
+      right: 2rem;
+      width: 360px;
+      height: 480px;
+      background: rgba(3, 7, 15, 0.96);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 14px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 242, 254, 0.2);
+      z-index: 2000;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
+    }
+
+    #obsidian-chat-box.active { display: flex; }
+
+    .chat-header {
+      background: rgba(0, 242, 254, 0.12);
+      padding: 1rem;
+      border-bottom: 1px solid var(--neon-cyan);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--neon-cyan);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      font-size: 0.82rem;
+    }
+
+    .chat-msg {
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      max-width: 85%;
+      line-height: 1.4;
+    }
+
+    .chat-msg.bot {
+      background: rgba(157, 78, 221, 0.15);
+      border: 1px solid rgba(157, 78, 221, 0.4);
+      color: #f1f5f9;
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      background: rgba(0, 242, 254, 0.15);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      color: var(--neon-cyan);
+      align-self: flex-end;
+    }
+
+    .chat-footer {
+      padding: 0.8rem;
+      background: rgba(2, 5, 11, 0.9);
+      border-top: 1px solid rgba(0, 242, 254, 0.2);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(3, 7, 15, 0.9);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .chat-input:focus { border-color: var(--neon-cyan); }
+
+    .chat-send-btn {
+      background: var(--neon-cyan);
+      color: #02050b;
+      border: none;
+      border-radius: 6px;
+      padding: 0 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chat-send-btn:hover { background: #fff; }
+
+    /* Cookie Banner */
+    #cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(3, 7, 15, 0.98);
+      border-top: 1px solid var(--border-cyan);
+      padding: 0.9rem 2rem;
+      z-index: 2500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding: 2.5rem 0;
@@ -861,6 +1059,7 @@
       color: var(--text-dim);
       font-size: 0.88rem;
       background: #020408;
+      margin-bottom: 50px;
     }
 
     footer span { color: var(--neon-cyan); }
@@ -876,22 +1075,23 @@
 </head>
 <body>
 
+  <div class="cyber-bg-glow"></div>
   <div class="crt-scanlines"></div>
-  <div id="three-canvas"></div>
+  <canvas id="three-canvas"></canvas>
 
-  <!-- Navigation Bar with Instant CV Download -->
+  <!-- Fixed Navigation -->
   <nav>
     <a href="#about" class="nav-brand">&lt;RM<span>_SEC</span> /&gt;</a>
     <ul class="nav-menu">
       <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
+      <li><a href="#skills">Skills Matrix</a></li>
       <li><a href="#projects">Tools & Research</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#certifications">Certifications</a></li>
       <li><a href="#media-honors">Media & Speaking</a></li>
       <li><a href="#hall-of-fame">Hall of Fame</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="./Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-nav-cv"><i class="fas fa-file-download"></i> Download CV</a></li>
+      <li><a href="./Awards and achievments/Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-nav-cv" onclick="downloadResume(event, this)"><i class="fas fa-file-download"></i> Download CV</a></li>
     </ul>
   </nav>
 
@@ -909,16 +1109,16 @@
           <h1 class="glitch-text">Rhishinathvarma <span>Marimuthu</span></h1>
           <p class="hero-lead">Senior Offensive Security Engineer | OWASP Chapter Lead</p>
           <p class="hero-text">
-            Offensive Security Specialist with 5+ years of experience across Web & Mobile Application VAPT (iOS/Android), Secure Code Review (SAST/DAST), API Penetration Testing, AI-driven Security Tooling, and SIEM architectures. Ranked among the Top 15 Security Researchers in India by NCIIPC and officially commended by NASA, Government of India (300+ secured digital assets), and global government agencies.
+            Offensive Security Specialist with 5+ years of experience across Web & Mobile Application VAPT (iOS/Android), Secure Code Review (SAST/DAST), API Penetration Testing, AI-driven Security Tooling, and SIEM architectures. B.E. Graduate in Electrical and Electronics Engineering (EEE). Ranked among the Top 15 Security Researchers in India by NCIIPC and officially commended by NASA, Government of India (300+ secured digital assets), and global government agencies.
           </p>
           <div class="btn-group">
-            <a href="./Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-3d btn-cv">
+            <a href="./Awards and achievments/Rhishinathvarma_Marimuthu_Resume_updated.pdf" download="Rhishinathvarma_Marimuthu_Resume.pdf" class="btn-3d btn-cv" onclick="downloadResume(event, this)">
               <i class="fas fa-file-download"></i> Download Full CV
             </a>
-            <a href="#contact" class="btn-3d btn-glow">
-              <i class="fas fa-terminal"></i> Direct Message Channel
+            <a href="https://wa.me/917402664313?text=Hello%20Rhishinathvarma,%20reaching%20out%20via%20your%20security%20portfolio." target="_blank" rel="noopener noreferrer" class="btn-3d btn-glow">
+              <i class="fab fa-whatsapp"></i> WhatsApp (+91 7402664313)
             </a>
-            <a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank" class="btn-3d btn-glass">
+            <a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank" rel="noopener noreferrer" class="btn-3d btn-glass">
               <i class="fab fa-linkedin-in"></i> LinkedIn Network
             </a>
           </div>
@@ -936,10 +1136,10 @@
             <div class="term-row" style="margin-top: 0.8rem;"><span class="p-cyan">sec-eng@kali:~$</span> cat credentials.json</div>
             <div class="term-row p-val" style="background: rgba(0,0,0,0.5); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
               {<br>
+              &nbsp;&nbsp;<span class="p-purple">"degree"</span>: <span class="p-green">"B.E. Electrical & Electronics Engineering (EEE)"</span>,<br>
               &nbsp;&nbsp;<span class="p-purple">"national_rank"</span>: <span class="p-green">"Top 15 Security Researcher (NCIIPC)"</span>,<br>
               &nbsp;&nbsp;<span class="p-purple">"gov_portals_secured"</span>: <span class="p-green">"300+ Assets"</span>,<br>
-              &nbsp;&nbsp;<span class="p-purple">"bounty_rewards"</span>: <span class="p-green">"$20,000+ (Private Programs)"</span>,<br>
-              &nbsp;&nbsp;<span class="p-purple">"specializations"</span>: ["VAPT", "AI Exploit Agents", "API Pentesting"]<br>
+              &nbsp;&nbsp;<span class="p-purple">"bounty_rewards"</span>: <span class="p-green">"$20,000+ (Private Programs)"</span><br>
               }
             </div>
             <div class="term-row" style="margin-top: 0.8rem;"><span class="p-cyan">sec-eng@kali:~$</span> ./status.sh</div>
@@ -976,101 +1176,118 @@
       </div>
     </section>
 
-    <!-- Technical Skills Matrix -->
+    <!-- Cyber Warfare & Technical Skills Matrix -->
     <section id="skills">
-      <h2 class="section-headline"><i class="fas fa-terminal" style="color: var(--neon-cyan);"></i> Technical Skills Matrix</h2>
-      <div class="skills-grid-3d">
+      <h2 class="section-headline"><i class="fas fa-terminal" style="color: var(--neon-cyan);"></i> Cyber Warfare & Technical Skills Matrix</h2>
+      <div class="hud-skills-grid">
         
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 1 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-bug"></i> Offensive Security & VAPT</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">Web & Mobile VAPT (iOS & Android)</span>
-              <span class="tech-pill">RESTful & GraphQL API Pentesting</span>
-              <span class="tech-pill">Thick Client Pentesting</span>
-              <span class="tech-pill">Network VAPT</span>
-              <span class="tech-pill">Red Teaming Operations</span>
-              <span class="tech-pill">Threat Intelligence</span>
-              <span class="tech-pill">SEBI Audits</span>
-              <span class="tech-pill">Phishing Simulation</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-crosshairs" style="color: var(--neon-cyan);"></i> Offensive Security & VAPT</div>
+              <span class="hud-tag">MOD-01</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-mobile-screen-button"></i> Web & Mobile VAPT (iOS/Android)</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-network-wired"></i> RESTful & GraphQL API Pentesting</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-desktop"></i> Thick Client Application Pentesting</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-server"></i> Network Infrastructure VAPT</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-user-ninja"></i> Red Teaming & Adversary Simulation</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-user-secret"></i> Threat Intelligence & Recon</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-file-shield"></i> SEBI Regulatory Security Audits</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-envelope-open-text"></i> Enterprise Phishing Simulation</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 2 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-robot"></i> AI & Offensive Automation</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">AI SAST/DAST Agents</span>
-              <span class="tech-pill">Autonomous API Testing Agents</span>
-              <span class="tech-pill">CVE Correlation Engines</span>
-              <span class="tech-pill">Automated Recon Extensions</span>
-              <span class="tech-pill">Tech-Stack Fingerprinting</span>
-              <span class="tech-pill">Android Exploit Pipelines</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-brain" style="color: var(--neon-purple);"></i> AI & Offensive Automation</div>
+              <span class="hud-tag">MOD-02</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-robot"></i> AI Autonomous SAST/DAST Agents</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-microchip"></i> Autonomous API Testing Agents</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-bolt-lightning"></i> Real-time CVE Correlation Engines</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-satellite-dish"></i> Automated OSINT Recon Extensions</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-fingerprint"></i> Tech-Stack Fingerprinting Engines</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-android"></i> Dynamic Android Exploit Pipelines</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 3 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-tools"></i> Security Tools & Frameworks</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">Burp Suite Pro</span>
-              <span class="tech-pill">OWASP ZAP</span>
-              <span class="tech-pill">Nessus</span>
-              <span class="tech-pill">Netsparker</span>
-              <span class="tech-pill">Postman</span>
-              <span class="tech-pill">Fortify</span>
-              <span class="tech-pill">Checkmarx</span>
-              <span class="tech-pill">Ghidra</span>
-              <span class="tech-pill">Frida</span>
-              <span class="tech-pill">MobSF</span>
-              <span class="tech-pill">Objection</span>
-              <span class="tech-pill">Wazuh SIEM</span>
-              <span class="tech-pill">Nmap</span>
-              <span class="tech-pill">Flipper Zero</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-tools" style="color: var(--neon-green);"></i> Security Tooling Arsenal</div>
+              <span class="hud-tag">MOD-03</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-bug"></i> Burp Suite Professional & OWASP ZAP</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-radar"></i> Nessus & Netsparker Scanners</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-paper-plane"></i> Postman API Security Suite</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-code"></i> Fortify & Checkmarx SAST</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-code-compare"></i> Ghidra Binary Reverse Engineering</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-syringe"></i> Frida & Objection Dynamic Hooking</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-shield-halved"></i> MobSF & Wazuh SIEM / XDR</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-sitemap"></i> Nmap Network Discovery</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 4 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-shield-alt"></i> Standards & Methodologies</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">OWASP Top 10</span>
-              <span class="tech-pill">SANS Top 25</span>
-              <span class="tech-pill">NIST CSF</span>
-              <span class="tech-pill">PTES Standard</span>
-              <span class="tech-pill">DevSecOps CI/CD</span>
-              <span class="tech-pill">Secure Code Review (SCR)</span>
-              <span class="tech-pill">SOC L2/L3 Architecture</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-shield-alt" style="color: var(--neon-blue);"></i> Standards & Frameworks</div>
+              <span class="hud-tag">MOD-04</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-award"></i> OWASP Top 10 & API Security Top 10</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-list-check"></i> SANS Top 25 CWE Vulnerabilities</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-building-shield"></i> NIST Cybersecurity Framework (CSF)</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-diagram-project"></i> PTES Penetration Testing Standard</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-infinity"></i> DevSecOps CI/CD Hardening</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-file-code"></i> Polyglot Secure Code Review (SCR)</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-tower-broadcast"></i> SOC L2/L3 Detection Engineering</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 5 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-server"></i> Environments & Firewalls</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">Kali Linux</span>
-              <span class="tech-pill">Parrot Security OS</span>
-              <span class="tech-pill">Ubuntu / Debian</span>
-              <span class="tech-pill">Windows Server</span>
-              <span class="tech-pill">macOS</span>
-              <span class="tech-pill">Fortinet FortiGate 40F</span>
-              <span class="tech-pill">Sophos XG Firewalls</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-server" style="color: var(--neon-cyan);"></i> Environments & Firewalls</div>
+              <span class="hud-tag">MOD-05</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-linux"></i> Kali Linux & Parrot Security OS</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-ubuntu"></i> Ubuntu Server & Debian Core</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-windows"></i> Windows Server & Active Directory</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-apple"></i> macOS Security Subsystems</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-fire-extinguisher"></i> Fortinet FortiGate 40F NGFW</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-shield"></i> Sophos XG Next-Gen Firewalls</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
+        <!-- Module 6 -->
+        <div class="tilt-card-3d hud-card">
           <div class="depth-layer">
-            <h3><i class="fas fa-microchip"></i> Hardware & Wireless Pentesting</h3>
-            <div class="tag-cloud">
-              <span class="tech-pill">Flipper Zero</span>
-              <span class="tech-pill">NFC / RFID Vulnerabilities</span>
-              <span class="tech-pill">Bluetooth & BLE Attacks</span>
-              <span class="tech-pill">Sub-GHz Auditing</span>
+            <div class="hud-header">
+              <div class="hud-title"><i class="fas fa-microchip" style="color: var(--neon-red);"></i> Hardware & Wireless Pentesting</div>
+              <span class="hud-tag">MOD-06</span>
+            </div>
+            <div class="hud-badges-wrap">
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-gamepad"></i> Flipper Zero Multi-Protocol Tool</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-id-badge"></i> NFC / RFID Emulation & Cloning</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fab fa-bluetooth-b"></i> Bluetooth Low Energy (BLE) Attacks</span><span class="hud-indicator"></span></div>
+              <div class="hud-item"><span class="hud-item-name"><i class="fas fa-wave-square"></i> Sub-GHz Auditing & Signal Replay</span><span class="hud-indicator"></span></div>
             </div>
           </div>
         </div>
@@ -1081,12 +1298,12 @@
     <!-- Featured Research & Tooling Section -->
     <section id="projects">
       <h2 class="section-headline"><i class="fas fa-code-branch" style="color: var(--neon-cyan);"></i> Featured Security Tooling & Research</h2>
-      <div class="skills-grid-3d">
+      <div class="media-gallery-grid">
         
-        <div class="tilt-card-3d skill-card-3d">
-          <div class="depth-layer">
-            <h3><i class="fas fa-brain"></i> AI Autonomous Recon Engine</h3>
-            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.2rem;">
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-card-body" style="padding: 2.2rem;">
+            <h4><i class="fas fa-brain" style="color: var(--neon-cyan);"></i> AI Autonomous Recon Engine</h4>
+            <p style="color: var(--text-dim); font-size: 0.92rem; margin: 1rem 0 1.4rem;">
               Autonomous LLM-driven reconnaissance extension to crawl web assets, dynamically fingerprint infrastructure tech stacks, and correlate live CVE exploit paths.
             </p>
             <div class="tag-cloud">
@@ -1098,10 +1315,10 @@
           </div>
         </div>
 
-        <div class="tilt-card-3d skill-card-3d">
-          <div class="depth-layer">
-            <h3><i class="fas fa-network-wired"></i> End-to-End API Security Pipeline</h3>
-            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.2rem;">
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-card-body" style="padding: 2.2rem;">
+            <h4><i class="fas fa-network-wired" style="color: var(--neon-green);"></i> End-to-End API Security Pipeline</h4>
+            <p style="color: var(--text-dim); font-size: 0.92rem; margin: 1rem 0 1.4rem;">
               Automated testing framework orchestrating OWASP API Top 10 vulnerability discovery, BOLA/BFLA identification, and schema fuzzing across REST & GraphQL endpoints.
             </p>
             <div class="tag-cloud">
@@ -1114,18 +1331,15 @@
         </div>
 
         <!-- Google Hacking Database Section -->
-        <div class="tilt-card-3d skill-card-3d">
-          <div class="depth-layer">
-            <h3><i class="fas fa-search"></i> Google Hacking Database (GHDB-8073)</h3>
-            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.2rem;">
-              Published author of recognized reconnaissance and OSINT dork signatures archived on Exploit-DB for identifying critical exposed attack surfaces.
-            </p>
-            <div class="tag-cloud" style="margin-bottom: 0.8rem;">
-              <span class="tech-pill">Exploit-DB</span>
-              <span class="tech-pill">GHDB-ID: 8073</span>
-              <span class="tech-pill">OSINT</span>
-            </div>
-            <a onclick="openLightbox('./google%20hacking%20database%20author1.png')" class="cert-link">
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./google hacking database author1.png" alt="Google Hacking Database Author GHDB-8073" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-search" style="color: var(--neon-purple);"></i> Google Hacking Database (GHDB-8073)</h4>
+            <p>Published author of recognized reconnaissance and OSINT dork signatures archived on Exploit-DB.</p>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
               <i class="fas fa-eye"></i> View GHDB Submission Proof
             </a>
           </div>
@@ -1219,93 +1433,99 @@
     <!-- Industry Certifications Section -->
     <section id="certifications">
       <h2 class="section-headline"><i class="fas fa-certificate" style="color: var(--neon-cyan);"></i> Industry Certifications</h2>
-      <div class="certs-grid-3d">
+      <div class="media-gallery-grid">
         
         <!-- CEH -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CEH.jpg')"><i class="fas fa-shield-virus"></i></div>
-            <div class="cert-details">
-              <h4>CEH v11</h4>
-              <p>Certified Ethical Hacker • EC-Council</p>
-              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: ECC4531789062</span>
-              <a onclick="openLightbox('./CEH.jpg')" class="cert-link">
-                <i class="fas fa-eye"></i> View Certificate
-              </a>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./CEH.png" alt="CEH v11 Certificate" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-virus" style="color: var(--neon-purple);"></i> CEH v11</h4>
+            <p>Certified Ethical Hacker • EC-Council</p>
+            <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: ECC4531789062</span>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate Image
+            </a>
           </div>
         </div>
 
         <!-- eMAPT -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./eMAPT.jpg')"><i class="fas fa-mobile-alt"></i></div>
-            <div class="cert-details">
-              <h4>eMAPT</h4>
-              <p>Mobile App Penetration Tester • eLearnSecurity / INE</p>
-              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: 143337663</span>
-              <a onclick="openLightbox('./eMAPT.jpg')" class="cert-link">
-                <i class="fas fa-eye"></i> View Certificate
-              </a>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./eMAPT.png" alt="eMAPT Certificate" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-mobile-alt" style="color: var(--neon-cyan);"></i> eMAPT</h4>
+            <p>Mobile App Penetration Tester • eLearnSecurity / INE</p>
+            <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: 143337663</span>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate Image
+            </a>
           </div>
         </div>
 
         <!-- CRTA -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CRTA.pdf')"><i class="fas fa-user-ninja"></i></div>
-            <div class="cert-details">
-              <h4>CRTA</h4>
-              <p>Certified Red Team Analyst • CyberWarFare Labs</p>
-              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: CRTA-695e4ebb823d7631cc46a6a9</span>
-              <a onclick="openLightbox('./CRTA.pdf')" class="cert-link">
-                <i class="fas fa-file-pdf"></i> View PDF Certificate
-              </a>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./CRTA_2.png" alt="CRTA Certificate" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-user-ninja" style="color: var(--neon-red);"></i> CRTA</h4>
+            <p>Certified Red Team Analyst • CyberWarFare Labs</p>
+            <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: CRTA-695e4ebb823d7631cc46a6a9</span>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate Image
+            </a>
           </div>
         </div>
 
         <!-- API-RTA -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./API%20RTA.pdf')"><i class="fas fa-network-wired"></i></div>
-            <div class="cert-details">
-              <h4>API-RTA</h4>
-              <p>API Red Team Analyst • CyberWarFare Labs</p>
-              <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: API-RTA-695b9349823d7631cc459f96</span>
-              <a onclick="openLightbox('./API%20RTA.pdf')" class="cert-link">
-                <i class="fas fa-file-pdf"></i> View PDF Certificate
-              </a>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./API%20RTA_2.png" alt="API-RTA Certificate" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-network-wired" style="color: var(--neon-green);"></i> API-RTA</h4>
+            <p>API Red Team Analyst • CyberWarFare Labs</p>
+            <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">ID: API-RTA-695b9349823d7631cc459f96</span>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate Image
+            </a>
           </div>
         </div>
 
         <!-- CRTOM -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon" style="cursor: pointer;" onclick="openLightbox('./CRTOM.pdf')"><i class="fas fa-tasks"></i></div>
-            <div class="cert-details">
-              <h4>CRTOM</h4>
-              <p>Red Team Operations Management • Red Team Leaders</p>
-              <a href="https://courses.redteamleaders.com/exam-completion/bc2012344eff211d" target="_blank" class="cert-link">
-                <i class="fas fa-external-link-alt"></i> Verify Credential
-              </a>
-              <a onclick="openLightbox('./CRTOM.pdf')" class="cert-link" style="margin-left: 10px;">
-                <i class="fas fa-file-pdf"></i> View PDF
-              </a>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./CRTOM_2.png" alt="CRTOM Certificate" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-tasks" style="color: var(--neon-blue);"></i> CRTOM</h4>
+            <p>Red Team Operations Management • Red Team Leaders</p>
+            <a href="https://courses.redteamleaders.com/exam-completion/bc2012344eff211d" target="_blank" rel="noopener noreferrer" class="cert-link" style="margin-right: 10px;">
+              <i class="fas fa-external-link-alt"></i> Verify Credential
+            </a>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Image
+            </a>
           </div>
         </div>
 
         <!-- CCIO -->
-        <div class="tilt-card-3d cert-item-3d">
-          <div class="depth-layer" style="display: flex; align-items: center; gap: 1.2rem; width: 100%;">
-            <div class="cert-badge-icon"><i class="fas fa-balance-scale"></i></div>
-            <div class="cert-details">
-              <h4>CCIO</h4>
-              <p>Cyber Crime Intervention Officer • ISAC/NSD</p>
-            </div>
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" style="background: rgba(157, 78, 221, 0.08); border-style: dashed;">
+            <i class="fas fa-balance-scale fa-3x" style="color: var(--neon-purple);"></i>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-balance-scale" style="color: var(--neon-purple);"></i> CCIO</h4>
+            <p>Cyber Crime Intervention Officer • ISAC/NSD</p>
+            <span style="color: var(--text-dim); font-size: 0.75rem; font-family: 'Fira Code', monospace; display: block; margin-top: 0.15rem;">Official Officer Credential</span>
           </div>
         </div>
 
@@ -1319,8 +1539,8 @@
         
         <!-- Sri Krishna College - Keynote 1 -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Sri%20krishna%20engineering%20collge%20Speaker1.jpg')">
-            <img src="./Sri%20krishna%20engineering%20collge%20Speaker1.jpg" alt="HackZen 26 Hackathon Judge & Speaker" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Sri krishna engineering collge Speaker1.jpg" alt="HackZen 26 Hackathon Judge & Speaker" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1331,8 +1551,8 @@
 
         <!-- Sri Krishna College - Awards 2 -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Sri%20krishna%20engineering%20collge%20Speaker2.jpg')">
-            <img src="./Sri%20krishna%20engineering%20collge%20Speaker2.jpg" alt="HackZen 26 Valedictory ceremony" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Sri krishna engineering collge Speaker2.jpg" alt="HackZen 26 Valedictory ceremony" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1343,8 +1563,8 @@
 
         <!-- RIT Keynote - Threat Intel 1 -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./RIT%20speaker1.jpg')">
-            <img src="./RIT%20speaker1.jpg" alt="RIT Chennai Threat Intel Keynote" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./RIT speaker1.png" alt="RIT Chennai Threat Intel Keynote" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1355,8 +1575,8 @@
 
         <!-- RIT Felicitation Memento 2 -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./RIT%20speaker2.jpg')">
-            <img src="./RIT%20speaker2.jpg" alt="RIT Chennai Memento Felicitation" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./RIT speaker2.png" alt="RIT Chennai Memento Felicitation" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1367,8 +1587,8 @@
 
         <!-- Christ University - FOOBAR 9.0 (1) -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Christ%20speaker1.jpg')">
-            <img src="./Christ%20speaker1.jpg" alt="Christ University Speaker" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Christ speaker1.png" alt="Christ University Speaker" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1379,8 +1599,8 @@
 
         <!-- Christ University - Android Components (2) -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Christ%20speaker2.jpg')">
-            <img src="./Christ%20speaker2.jpg" alt="Christ University Android Lecture" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Christ speaker2.png" alt="Christ University Android Lecture" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1391,8 +1611,8 @@
 
         <!-- Social Media Company / Theneer Idaivelai (1) -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./speaker%20at%20the%20social%20media%20company1.jpg')">
-            <img src="./speaker%20at%20the%20social%20media%20company1.jpg" alt="Corporate Cyber Training" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./speaker at the social media company1.png" alt="Corporate Cyber Training" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1403,8 +1623,8 @@
 
         <!-- Social Media Company / Theneer Idaivelai (2) -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./speaker%20at%20the%20social%20media%20company2.jpg')">
-            <img src="./speaker%20at%20the%20social%20media%20company2.jpg" alt="Theneer Idaivelai Security Workshop" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./speaker at the social media company2.png" alt="Theneer Idaivelai Security Workshop" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1415,8 +1635,8 @@
 
         <!-- Yugam 2026 Spotlight Talk -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./yugam%20speaker1.jpg')">
-            <img src="./yugam%20speaker1.jpg" alt="Yugam 2026 Speaker" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./yugam speaker1.png" alt="Yugam 2026 Speaker" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1425,10 +1645,34 @@
           </div>
         </div>
 
+        <!-- VIT Guest Speaker -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./VIT guest speaker.png" alt="VIT Guest Speaker" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-university" style="color: var(--neon-purple);"></i> VIT Guest Lecture</h4>
+            <p>Guest lecture on offensive security & vulnerability research at VIT University.</p>
+          </div>
+        </div>
+
+        <!-- Vetri Tech Media Coverage (1) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Vetritec speaker 1.png" alt="Vetri Tech Speaker 1" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-newspaper" style="color: var(--neon-cyan);"></i> Vetri Tech Media Feature</h4>
+            <p>Press coverage recognizing security research contributions to FinTech & Govt sectors.</p>
+          </div>
+        </div>
+
         <!-- Hack Tamil YouTube Feature -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Featured%20in%20youtube%20.jpg')">
-            <img src="./Featured%20in%20youtube%20.jpg" alt="Hack Tamil Featured" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Featured in youtube .png" alt="Hack Tamil Featured" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1439,8 +1683,8 @@
 
         <!-- Vetri Tech Media Coverage -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Vetritec%20speaker%202.jpg')">
-            <img src="./Vetritec%20speaker%202.jpg" alt="Press Media Feature" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Vetritec speaker 2.png" alt="Press Media Feature" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1452,15 +1696,15 @@
       </div>
     </section>
 
-    <!-- Comprehensive Hall of Fame & Official Appreciation Showcase -->
+    <!-- Comprehensive Hall of Fame & Official Appreciation Showcase (Explicitly using URL-encoded JPG for ACT) -->
     <section id="hall-of-fame">
       <h2 class="section-headline"><i class="fas fa-trophy" style="color: var(--neon-cyan);"></i> Hall of Fame & Commendations</h2>
       <div class="media-gallery-grid">
         
         <!-- Top 15 NCIIPC India -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Top%2015%20Researcher%20of%20NCIIP%20of%20India.jpg')">
-            <img src="./Top%2015%20Researcher%20of%20NCIIP%20of%20India.jpg" alt="NCIIPC Top 15 Researcher" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Top 15 Researcher of NCIIP of India.png" alt="NCIIPC Top 15 Researcher" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1469,31 +1713,43 @@
           </div>
         </div>
 
-        <!-- NASA Hall of Fame & Letter -->
+        <!-- NASA Hall of Fame -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./NASA%20Hall%20of%20fame.png')">
-            <img src="./NASA%20Hall%20of%20fame.png" alt="NASA Hall of Fame" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./NASA Hall of fame.png" alt="NASA Hall of Fame" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-rocket" style="color: var(--neon-cyan);"></i> NASA Hall of Fame</h4>
             <p>Inducted into NASA's Vulnerability Disclosure Program (VDP) under alias 'blackparrot'.</p>
-            <a onclick="openLightbox('./NASA%20Appreciation%20Letter.pdf')" class="cert-link">
-              <i class="fas fa-file-pdf"></i> View NASA Appreciation Letter
+          </div>
+        </div>
+
+        <!-- NASA Appreciation Letter -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./NASA Appreciation letter_2.png" alt="NASA Official Letter of Appreciation" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-envelope-open-text" style="color: var(--neon-blue);"></i> NASA Official Letter</h4>
+            <p>Official Letter of Appreciation from NASA Headquarters for vulnerability mitigation.</p>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View NASA Letter Image
             </a>
           </div>
         </div>
 
         <!-- USA Gov (DHS & DOC) Appreciation -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./USA%20gov%20Appreciation%20mail%201.png')">
-            <img src="./USA%20gov%20Appreciation%20mail%201.png" alt="USA Gov DHS Appreciation" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./USA gov Appreciation mail 1.png" alt="USA Gov DHS Appreciation" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-flag-usa" style="color: var(--neon-blue);"></i> US Government (DHS & DOC)</h4>
             <p>Official commendation for securing national network infrastructure via the DHS & DOC VDP.</p>
-            <a onclick="openLightbox('./USA%20gov%20Appreciation%20mail.jpg')" class="cert-link">
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
               <i class="fas fa-eye"></i> View Dept of Commerce Letter
             </a>
           </div>
@@ -1501,8 +1757,8 @@
 
         <!-- Australian Government Department of Health -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Australia%20gov%20appreciation%20mail.jpg')">
-            <img src="./Australia%20gov%20appreciation%20mail.jpg" alt="Australia Gov Appreciation" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Australia gov appreciation mail.png" alt="Australia Gov Appreciation" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1513,8 +1769,8 @@
 
         <!-- Zerodha Hall of Fame -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Zerodha%20hall%20of%20fame.png')">
-            <img src="./Zerodha%20hall%20of%20fame.png" alt="Zerodha Hall of Fame" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Zerodha hall of fame.png" alt="Zerodha Hall of Fame" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1523,41 +1779,56 @@
           </div>
         </div>
 
-        <!-- Drexel University Hall of Fame & Appreciation -->
+        <!-- Drexel University Hall of Fame & Letter -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Drexel%20University%20Hall%20of%20fame.jpg')">
-            <img src="./Drexel%20University%20Hall%20of%20fame.jpg" alt="Drexel University Hall of Fame" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Drexel University appreciation letter_2.png" alt="Drexel University Letter of Appreciation" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-university" style="color: var(--neon-purple);"></i> Drexel University</h4>
             <p>Recognized in 2024 Hall of Fame & official Letter of Appreciation from the CISO.</p>
-            <a onclick="openLightbox('./Drexel%20University%20letter%20of%20appreciation.pdf')" class="cert-link">
-              <i class="fas fa-file-pdf"></i> View Official Letter
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Official Letter
             </a>
           </div>
         </div>
 
         <!-- Lenovo Letter of Appreciation -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Lenovo%20Letter%20of%20Appreciation.pdf')">
-            <img src="./Lenovo%20Letter%20of%20Appreciation.pdf" alt="Lenovo Certificate of Appreciation" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Lenovo appreciation letter_2.png" alt="Lenovo Certificate of Appreciation" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-laptop-code" style="color: var(--neon-blue);"></i> Lenovo PSIRT Commendation</h4>
             <p>Official Certificate of Appreciation for responsible reporting on product security.</p>
-            <a onclick="openLightbox('./Lenovo%20Letter%20of%20Appreciation.pdf')" class="cert-link">
-              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate
+            </a>
+          </div>
+        </div>
+
+        <!-- ACT Bug Bounty Appreciation (Explicit URL-encoded JPG matching uploaded format) -->
+        <div class="tilt-card-3d media-card-3d">
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./ACT%20appreciation%20letter.jpg" alt="ACT Bug Bounty Appreciation" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
+          </div>
+          <div class="depth-layer media-card-body">
+            <h4><i class="fas fa-shield-alt" style="color: var(--neon-red);"></i> ACT Fibernet Bug Bounty</h4>
+            <p>Certificate of appreciation awarded for cybersecurity research protecting network infrastructure.</p>
+            <a onclick="openLightboxFromWrap(this.closest('.media-card-3d'))" class="cert-link">
+              <i class="fas fa-eye"></i> View Certificate
             </a>
           </div>
         </div>
 
         <!-- Techieegy Hall of Fame -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Techieegy%20Hall%20of%20fame.png')">
-            <img src="./Techieegy%20Hall%20of%20fame.png" alt="Techieegy Hall of Fame" />
-            <div class="media-overlay"><i class="fas fa-shield-alt" style="color: var(--neon-green);"></i></div>
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Techieegy Hall of fame.png" alt="Techieegy Hall of Fame" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-shield-alt" style="color: var(--neon-green);"></i> Techieegy Hall of Fame</h4>
@@ -1567,9 +1838,9 @@
 
         <!-- Inflectra Hall of Fame -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./Inflectra%20Hall%20of%20Fame.png')">
-            <img src="./Inflectra%20Hall%20of%20Fame.png" alt="Inflectra Hall of Fame" />
-            <div class="media-overlay"><i class="fas fa-award" style="color: #ffd700;"></i></div>
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./Inflectra Hall of Fame.png" alt="Inflectra Hall of Fame" onerror="handleImgError(this)" />
+            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
             <h4><i class="fas fa-award" style="color: #ffd700;"></i> Inflectra Hall of Fame</h4>
@@ -1577,25 +1848,10 @@
           </div>
         </div>
 
-        <!-- ACT Bug Bounty Appreciation -->
-        <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./ACT%20letter%20of%20appreciation.pdf')">
-            <img src="./ACT%20letter%20of%20appreciation.pdf" alt="ACT Bug Bounty Appreciation" />
-            <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
-          </div>
-          <div class="depth-layer media-card-body">
-            <h4><i class="fas fa-shield-alt" style="color: var(--neon-red);"></i> ACT Fibernet Bug Bounty</h4>
-            <p>Certificate of appreciation awarded for cybersecurity research protecting network infrastructure.</p>
-            <a onclick="openLightbox('./ACT%20letter%20of%20appreciation.pdf')" class="cert-link">
-              <i class="fas fa-file-pdf"></i> View Certificate PDF
-            </a>
-          </div>
-        </div>
-
         <!-- Critical RCE in TN Govt -->
         <div class="tilt-card-3d media-card-3d">
-          <div class="media-thumb-wrap" onclick="openLightbox('./RCE%20in%20tn%20gov.png')">
-            <img src="./RCE%20in%20tn%20gov.png" alt="RCE in TN Govt" />
+          <div class="media-thumb-wrap" onclick="openLightboxFromWrap(this)">
+            <img src="./RCE in tn gov.png" alt="RCE in TN Govt" onerror="handleImgError(this)" />
             <div class="media-overlay"><i class="fas fa-search-plus"></i></div>
           </div>
           <div class="depth-layer media-card-body">
@@ -1607,268 +1863,545 @@
       </div>
     </section>
 
-    <!-- Interactive Contact Table & Form Section -->
+    <!-- Secure Contact Section -->
     <section id="contact">
-      <div class="tilt-card-3d contact-card-3d">
-        <div class="depth-layer">
-          <div class="badge-3d"><span class="radar-pulse"></span> INITIATE SECURE CONNECTION</div>
-          <h2 style="font-family: 'Orbitron', sans-serif; font-size: 2.3rem; margin-bottom: 0.8rem; color: #fff;">Contact Me</h2>
-          <p style="color: var(--text-dim); max-width: 650px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
-            Submit your message through the encrypted form below. Messages dispatch directly to my inbox.
-          </p>
+      <div class="contact-card-static">
+        <div class="badge-3d"><span class="radar-pulse"></span> INITIATE SECURE CONNECTION</div>
+        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 2.3rem; margin-bottom: 0.8rem; color: #fff;">Contact Me</h2>
+        <p style="color: var(--text-dim); max-width: 650px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+          Submit your encrypted message below. Messages dispatch directly to my inbox with automated fail-safe routing and DPDPA data privacy consent.
+        </p>
 
-          <div class="contact-grid">
-            <!-- Contact Info Cyber Table -->
-            <div>
-              <div class="cyber-table-wrap">
-                <table class="cyber-table">
-                  <thead>
-                    <tr>
-                      <th colspan="2">TRANSMISSION CHANNEL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="param">AGENT</td>
-                      <td class="val">Rhishinathvarma Marimuthu</td>
-                    </tr>
-                    <tr>
-                      <td class="param">EMAIL</td>
-                      <td class="val"><a href="mailto:rhishinathvarma@outlook.com">rhishinathvarma@outlook.com</a></td>
-                    </tr>
-                    <tr>
-                      <td class="param">NETWORK</td>
-                      <td class="val"><a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank">linkedin.com/in/rhishinathvarma-marimuthu</a></td>
-                    </tr>
-                    <tr>
-                      <td class="param">STATUS</td>
-                      <td class="val" style="color: var(--neon-green);">ENCRYPTED & READY</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Direct Mail Forwarding Form -->
-            <div>
-              <form action="https://formsubmit.co/rhishinathvarma@outlook.com" method="POST">
-                <input type="hidden" name="_subject" value="New Security Inquiry from Portfolio!">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-
-                <div class="form-group">
-                  <label for="name">NAME</label>
-                  <input type="text" id="name" name="Name" class="form-control" placeholder="John Doe" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="email">EMAIL</label>
-                  <input type="email" id="email" name="Email" class="form-control" placeholder="john@domain.com" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="phone">PHONE NUMBER</label>
-                  <input type="tel" id="phone" name="Phone" class="form-control" placeholder="+91 98765 43210" />
-                </div>
-
-                <div class="form-group">
-                  <label for="message">MESSAGE</label>
-                  <textarea id="message" name="Message" class="form-control" rows="3" placeholder="Describe the VAPT scope or inquiry..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">
-                  <i class="fas fa-terminal"></i> TRANSMIT PAYLOAD
-                </button>
-              </form>
+        <div class="contact-grid">
+          <!-- Contact Info Cyber Table -->
+          <div>
+            <div class="cyber-table-wrap">
+              <table class="cyber-table">
+                <thead>
+                  <tr>
+                    <th colspan="2">TRANSMISSION CHANNELS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="param">AGENT</td>
+                    <td class="val">Rhishinathvarma Marimuthu</td>
+                  </tr>
+                  <tr>
+                    <td class="param">EMAIL</td>
+                    <td class="val"><a href="mailto:rhishinathvarma@outlook.com">rhishinathvarma@outlook.com</a></td>
+                  </tr>
+                  <tr>
+                    <td class="param">WHATSAPP</td>
+                    <td class="val"><a href="https://wa.me/917402664313" target="_blank" rel="noopener noreferrer">+91 7402664313</a></td>
+                  </tr>
+                  <tr>
+                    <td class="param">NETWORK</td>
+                    <td class="val"><a href="https://www.linkedin.com/in/rhishinathvarma-marimuthu/" target="_blank" rel="noopener noreferrer">linkedin.com/in/rhishinathvarma-marimuthu</a></td>
+                  </tr>
+                  <tr>
+                    <td class="param">STATUS</td>
+                    <td class="val" style="color: var(--neon-green);">ENCRYPTED & READY</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
+          <!-- Hardened Asynchronous Form -->
+          <div>
+            <form id="secure-contact-form" onsubmit="handleSecureSubmit(event)">
+              <!-- Security Anti-Bot Honeypot Trap -->
+              <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+              <div class="form-group">
+                <label for="name"><i class="fas fa-user-shield"></i> NAME</label>
+                <input type="text" id="name" name="Name" class="form-control" placeholder="John Doe" required />
+              </div>
+
+              <div class="form-group">
+                <label for="email"><i class="fas fa-at"></i> EMAIL</label>
+                <input type="email" id="email" name="Email" class="form-control" placeholder="john.doe@example.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required />
+              </div>
+
+              <div class="form-group">
+                <label for="phone"><i class="fas fa-phone-alt"></i> PHONE NUMBER (E.G. +91 9876543210)</label>
+                <input type="tel" id="phone" name="Phone" class="form-control" placeholder="+91 9876543210" pattern="^\+?[0-9\s\-\(\)]{10,15}$" required title="Please enter a valid phone number (10-15 digits, optional + prefix)" />
+              </div>
+
+              <div class="form-group">
+                <label for="message"><i class="fas fa-terminal"></i> MESSAGE PAYLOAD</label>
+                <textarea id="message" name="Message" class="form-control" rows="3" placeholder="Describe the VAPT scope or inquiry..." required></textarea>
+              </div>
+
+              <!-- DPDPA Compliance Consent Checkbox -->
+              <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.8rem; background: rgba(0, 242, 254, 0.03); border: 1px solid rgba(0, 242, 254, 0.15); padding: 0.8rem; border-radius: 6px;">
+                <input type="checkbox" id="dpdpa-consent" name="DPDPA_Consent" required style="margin-top: 0.2rem; accent-color: var(--neon-cyan); cursor: pointer;" />
+                <label for="dpdpa-consent" style="cursor: pointer; color: var(--text-dim); line-height: 1.4;">
+                  I provide explicit consent for the processing of my personal data (Name, Email, Phone) in compliance with the Digital Personal Data Protection Act (DPDPA).
+                </label>
+              </div>
+
+              <button type="submit" id="submit-btn" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> TRANSMIT PAYLOAD
+              </button>
+              
+              <div id="form-status"></div>
+            </form>
+          </div>
         </div>
+
       </div>
     </section>
 
   </div>
 
-  <!-- Lightbox Modal Component (Images + PDF Document Previews) -->
+  <!-- Cookie Banner -->
+  <div id="cookie-banner">
+    <div><i class="fas fa-cookie-bite" style="color: var(--neon-cyan);"></i> This portfolio utilizes secure session cookies & telemetry analytics in compliance with data privacy standards.</div>
+    <div style="display: flex; gap: 0.8rem;">
+      <button onclick="acceptCookies()" style="background: var(--neon-cyan); color: #02050b; border: none; padding: 0.4rem 1rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Accept</button>
+      <button onclick="declineCookies()" style="background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 0.4rem 1rem; border-radius: 4px; cursor: pointer;">Decline</button>
+    </div>
+  </div>
+
+  <!-- Obsidian AI Assistant Floating Widget -->
+  <div id="obsidian-chat-toggler" onclick="toggleChatbot()" title="Ask Obsidian AI">
+    <i class="fas fa-gem"></i>
+  </div>
+
+  <div id="obsidian-chat-box">
+    <div class="chat-header">
+      <span><i class="fas fa-gem"></i> Obsidian AI Assistant</span>
+      <span style="cursor: pointer;" onclick="toggleChatbot()">&times;</span>
+    </div>
+    <div class="chat-body" id="chat-messages">
+      <div class="chat-msg bot">System online. I am Obsidian, Rhishinathvarma's intelligent security assistant. Ask me anything about his offensive security background, certifications, or education!</div>
+    </div>
+    <div class="chat-footer">
+      <input type="text" id="chat-input-field" class="chat-input" placeholder="Ask Obsidian..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+      <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal Component -->
   <div id="image-lightbox" onclick="closeLightbox(event)">
-    <span class="lightbox-close">&times;</span>
-    <div id="lightbox-container" style="max-width: 90vw; max-height: 85vh; display: flex; align-items: center; justify-content: center;">
-      <img id="lightbox-img" src="" alt="Enlarged View" style="display: none;" />
-      <div id="lightbox-pdf-view" style="display: none; background: #080e1a; padding: 2.5rem; border-radius: 12px; border: 1px solid var(--neon-cyan); text-align: center; max-width: 500px;">
-        <i class="fas fa-file-pdf" style="font-size: 4.5rem; color: var(--neon-red); margin-bottom: 1.2rem;"></i>
-        <h3 id="lightbox-pdf-title" style="color: #fff; margin-bottom: 0.8rem; font-family: 'Orbitron', sans-serif;">Official Security Document</h3>
-        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; font-family: 'Fira Code', monospace;">This official verification is archived as a secure document.</p>
-        <a id="lightbox-pdf-link" href="" target="_blank" download class="btn-3d btn-glow" style="display: inline-flex;">
-          <i class="fas fa-download"></i> Open / Download PDF
-        </a>
-      </div>
+    <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+    <div id="lightbox-container">
+      <img id="lightbox-img" src="" alt="Enlarged View" />
     </div>
   </div>
 
   <footer>
-    <p>© 2026 <span>Rhishinathvarma Marimuthu</span>. Built & Hosted with GitHub Pages.</p>
+    <p>© 2026 <span>Rhishinathvarma Marimuthu</span>. Built & Hosted with GitHub Pages. • Security Standards Verified (OWASP / DPDPA / CSP)</p>
   </footer>
 
   <script>
-    const pdfPlaceholderSvg = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%23080e1a%22%20width%3D%22600%22%20height%3D%22400%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M270%20130%20h45%20l25%2025%20v85%20h-70%20z%22%20fill%3D%22none%22%20stroke%3D%22%23ff3366%22%20stroke-width%3D%223%22%2F%3E%3Ctext%20x%3D%22300%22%20y%3D%22270%22%20fill%3D%22%2300f2fe%22%20font-family%3D%22monospace%22%20font-size%3D%2216%22%20text-anchor%3D%22middle%22%20font-weight%3D%22bold%22%3E%5B%20OFFICIAL%20DOCUMENT%20%5D%3C%2Ftext%3E%3Ctext%20x%3D%22300%22%20y%3D%22295%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22monospace%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%3EClick%20to%20preview%20%26%20download%3C%2Ftext%3E%3C%2Fsvg%3E";
-
-    document.querySelectorAll('.media-thumb-wrap img').forEach(img => {
-      const src = img.getAttribute('src');
-      if (src && src.toLowerCase().includes('.pdf')) {
-        img.src = pdfPlaceholderSvg;
+    // Cookie Banner Management
+    function acceptCookies() {
+      localStorage.setItem('cookie_consent', 'accepted');
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+    function declineCookies() {
+      localStorage.setItem('cookie_consent', 'declined');
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('cookie_consent')) {
+        document.getElementById('cookie-banner').style.display = 'none';
       }
-      img.onerror = function() {
-        this.src = pdfPlaceholderSvg;
-      };
     });
+
+    // Obsidian AI Assistant Intelligent Intent Engine
+    function toggleChatbot() {
+      const box = document.getElementById('obsidian-chat-box');
+      box.classList.toggle('active');
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input-field');
+      const container = document.getElementById('chat-messages');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const userDiv = document.createElement('div');
+      userDiv.className = 'chat-msg user';
+      userDiv.innerText = text;
+      container.appendChild(userDiv);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'chat-msg bot';
+        const query = text.toLowerCase();
+
+        // Advanced Context-Aware Intent Engine
+        if (query.match(/\b(hi|hello|hey|greetings)\b/)) {
+          botDiv.innerText = "Hello! I am Obsidian, the AI security co-pilot for Rhishinathvarma Marimuthu. How can I assist you with his offensive security background or VAPT expertise today?";
+        } else if (query.includes('degree') || query.includes('education') || query.includes('college') || query.includes('eee') || query.includes('engineering') || query.includes('ug') || query.includes('graduat')) {
+          botDiv.innerText = "Rhishinathvarma holds a Bachelor of Engineering (B.E.) in Electrical and Electronics Engineering (EEE), which provides a strong analytical foundation for his advanced hardware, wireless, and software security research.";
+        } else if (query.includes('cert') || query.includes('ceh') || query.includes('crta') || query.includes('crtom') || query.includes('emapt') || query.includes('api-rta') || query.includes('ccio')) {
+          botDiv.innerText = "He holds professional industry credentials including CEH v11, eMAPT, CRTA (Certified Red Team Analyst), API-RTA (API Red Team Analyst), CRTOM (Red Team Operations Management), and CCIO.";
+        } else if (query.includes('nasa') || query.includes('nciipc') || query.includes('gov') || query.includes('award') || query.includes('hall of fame') || query.includes('lenovo') || query.includes('act')) {
+          botDiv.innerText = "Key recognitions include ranking among India's Top 15 Security Researchers by NCIIPC, induction into NASA's VDP Hall of Fame, and official commendations from the US DHS/DOC, Australian Government, Lenovo, and ACT Fibernet.";
+        } else if (query.includes('experience') || query.includes('cognizant') || query.includes('vaultinfosec') || query.includes('cyberfort') || query.includes('work') || query.includes('company')) {
+          botDiv.innerText = "He currently serves as a Security Engineer at Cognizant (Aug 2025–Present), with prior tenure as a Security Engineer at Vaultinfosec (2023–2025) and Associate Security Consultant at Cyberfort (2022–2023).";
+        } else if (query.includes('contact') || query.includes('email') || query.includes('whatsapp') || query.includes('phone') || query.includes('reach') || query.includes('number')) {
+          botDiv.innerText = "You can reach Rhishinathvarma via email at rhishinathvarma@outlook.com or directly on WhatsApp at +91 7402664313.";
+        } else if (query.includes('skills') || query.includes('vapt') || query.includes('tools') || query.includes('burp') || query.includes('ai') || query.includes('python')) {
+          botDiv.innerText = "His core specializations include Web/Mobile VAPT, API Pentesting, Secure Code Review (SAST/DAST), AI-driven security automation, Burp Suite Pro, Wazuh SIEM, and Python development.";
+        } else if (query.includes('oscp')) {
+          botDiv.innerText = "While not specifically holding OSCP, Rhishinathvarma holds advanced adversary simulation certifications like CRTA (Certified Red Team Analyst), API-RTA, and CRTOM.";
+        } else if (!query.match(/(rhishinathvarma|portfolio|security|vapt|engineer|researcher|skills|experience|project|hire|contact|cert|nasa|nciipc|cognizant|eee|degree)/)) {
+          botDiv.innerText = "I am specifically trained to answer questions about Rhishinathvarma's portfolio and experience. How can I help you with his work or background?";
+        } else {
+          botDiv.innerText = "Rhishinathvarma is a Senior Offensive Security Engineer with 5+ years of experience across VAPT and AI tooling. Would you like to review his certifications or contact him directly at +91 7402664313?";
+        }
+
+        container.appendChild(botDiv);
+        container.scrollTop = container.scrollHeight;
+      }, 300);
+    }
+
+    // Security Input Sanitizer (XSS Prevention)
+    function sanitize(str) {
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    // Hardened Asynchronous Form Handler with DPDPA Consent
+    async function handleSecureSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('secure-contact-form');
+      const btn = document.getElementById('submit-btn');
+      const status = document.getElementById('form-status');
+      
+      const honey = form.elements['_honey'].value;
+      if (honey) return;
+
+      const consent = document.getElementById('dpdpa-consent').checked;
+      if (!consent) {
+        alert('Please provide DPDPA data privacy consent to submit your message.');
+        return;
+      }
+
+      const name = sanitize(form.elements['Name'].value.trim());
+      const email = sanitize(form.elements['Email'].value.trim());
+      const phone = sanitize(form.elements['Phone'].value.trim());
+      const message = sanitize(form.elements['Message'].value.trim());
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENCRYPTING & TRANSMITTING...';
+      status.style.display = 'none';
+
+      if (window.location.protocol === 'file:') {
+        const mailtoUrl = `mailto:rhishinathvarma@outlook.com?subject=Security%20Inquiry%20from%20${encodeURIComponent(name)}&body=Name:%20${encodeURIComponent(name)}%0AEmail:%20${encodeURIComponent(email)}%0APhone:%20${encodeURIComponent(phone)}%0ADPDPA_Consent:%20Granted%0A%0AMessage:%0A${encodeURIComponent(message)}`;
+        window.location.href = mailtoUrl;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> TRANSMIT PAYLOAD';
+        status.style.display = 'block';
+        status.style.background = 'rgba(0, 242, 254, 0.15)';
+        status.style.color = 'var(--neon-cyan)';
+        status.style.border = '1px solid var(--neon-cyan)';
+        status.innerHTML = '[✓] Local file mode detected. Dispatching payload via local mail client...';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/rhishinathvarma@outlook.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            Name: name,
+            Email: email,
+            Phone: phone,
+            Message: message,
+            DPDPA_Consent: 'Granted',
+            _subject: `New Portfolio Security Inquiry from ${name}`
+          })
+        });
+
+        if (response.ok) {
+          form.reset();
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-check-circle"></i> TRANSMITTED';
+          status.style.display = 'block';
+          status.style.background = 'rgba(0, 255, 136, 0.15)';
+          status.style.color = 'var(--neon-green)';
+          status.style.border = '1px solid var(--neon-green)';
+          status.innerHTML = '[✓] SUCCESS: Payload encrypted and delivered to Rhishinathvarma.';
+        } else {
+          throw new Error('Network response not ok');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> RETRY TRANSMISSION';
+        status.style.display = 'block';
+        status.style.background = 'rgba(255, 51, 102, 0.15)';
+        status.style.color = 'var(--neon-red)';
+        status.style.border = '1px solid var(--neon-red)';
+        status.innerHTML = '[!] NOTICE: Direct API transmission blocked. Click here to launch email fallback.';
+        status.style.cursor = 'pointer';
+        status.onclick = function() {
+          window.location.href = `mailto:rhishinathvarma@outlook.com?subject=Security%20Inquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`;
+        };
+      }
+    }
+
+    // Comprehensive Auto-Discovery Image Fallback Engine (Resolves JPG/PNG/JPEG across all variants)
+    function handleImgError(img) {
+      if (!img.dataset.attempt) img.dataset.attempt = "0";
+      let attempt = parseInt(img.dataset.attempt);
+      let originalSrc = img.dataset.origSrc || img.getAttribute('src');
+      if (!img.dataset.origSrc) img.dataset.origSrc = originalSrc;
+      
+      let cleanName = decodeURIComponent(originalSrc.split('/').pop()).trim();
+      
+      let explicitMap = {
+        'CRTA': ['CRTA_2.png', 'CRTA_2.jpg', 'CRTA.png', 'CRTA.jpg'],
+        'API': ['API RTA_2.png', 'API RTA_2.jpg', 'API%20RTA_2.png', 'API%20RTA_2.jpg', 'APIRTA_2.png', 'APIRTA.png', 'API-RTA.png', 'apirta.png', 'api rta_2.png', 'API RTA_2.jpeg'],
+        'ACT': ['ACT appreciation letter.jpg', 'ACT appreciation letter.png', 'ACT appreciation letter_2.jpg', 'ACT appreciation letter_2.png', 'ACT%20appreciation%20letter.jpg', 'ACT%20appreciation%20letter_2.jpg', 'ACT.jpg', 'ACT.png']
+      };
+
+      let matchedKey = Object.keys(explicitMap).find(k => cleanName.toUpperCase().includes(k));
+      let baseNames = matchedKey ? explicitMap[matchedKey] : [cleanName, cleanName.replace('_2', '')];
+
+      let folders = ['./', './Awards and achievments/', './Awards and achievements/', './Awards%20and%20achievments/', './Awards%20and%20achievements/'];
+      
+      let candidatePaths = [];
+      for (let folder of folders) {
+        for (let name of baseNames) {
+          candidatePaths.push(folder + name);
+          candidatePaths.push(folder + encodeURIComponent(name));
+          candidatePaths.push(folder + name.toLowerCase());
+        }
+      }
+      
+      attempt++;
+      img.dataset.attempt = attempt.toString();
+      
+      if (attempt < candidatePaths.length) {
+        img.src = candidatePaths[attempt];
+      }
+    }
+
+    // Direct Lightbox Trigger from Any Card / Thumbnail
+    function openLightboxFromWrap(el) {
+      const img = el.querySelector('img');
+      if (img) {
+        const src = img.currentSrc || img.src;
+        if (src) openLightbox(src);
+      }
+    }
+
+    // Robust CV Download Helper
+    function downloadResume(e, link) {
+      e.preventDefault();
+      const targetUrl = link.getAttribute('href');
+      const cleanFileName = decodeURIComponent(targetUrl.split('/').pop());
+      
+      fetch(targetUrl, { method: 'HEAD' }).then(res => {
+        if (res.ok) {
+          window.location.href = targetUrl;
+        } else {
+          window.location.href = './' + cleanFileName;
+        }
+      }).catch(() => {
+        window.open(targetUrl, '_blank') || (window.location.href = targetUrl);
+      });
+    }
+
+    let lightboxZoomed = false;
 
     function openLightbox(src) {
       const modal = document.getElementById('image-lightbox');
       const modalImg = document.getElementById('lightbox-img');
-      const pdfView = document.getElementById('lightbox-pdf-view');
-      const pdfLink = document.getElementById('lightbox-pdf-link');
-      const pdfTitle = document.getElementById('lightbox-pdf-title');
 
-      if (src.toLowerCase().includes('.pdf')) {
-        modalImg.style.display = 'none';
-        pdfView.style.display = 'block';
-        pdfLink.href = src;
-        const decodedName = decodeURIComponent(src.replace(/^(\.\/|\/)/, ''));
-        pdfTitle.innerText = decodedName.replace(/\.[^/.]+$/, "");
-      } else {
-        pdfView.style.display = 'none';
-        modalImg.style.display = 'block';
-        modalImg.src = src;
-      }
+      lightboxZoomed = false;
+      modalImg.style.transform = 'scale(1)';
+      modalImg.style.cursor = 'zoom-in';
+      modalImg.style.transformOrigin = 'center center';
+
+      modalImg.onerror = function() {
+        handleImgError(this);
+      };
+
+      modalImg.src = src;
       modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox(e) {
       if (e.target.id === 'image-lightbox' || e.target.classList.contains('lightbox-close')) {
         document.getElementById('image-lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+        lightboxZoomed = false;
       }
     }
 
-    const container = document.getElementById('three-canvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 2000);
-    camera.position.z = 800;
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalImg = document.getElementById('lightbox-img');
+      if (modalImg) {
+        modalImg.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!lightboxZoomed) {
+            this.style.transform = 'scale(2)';
+            this.style.cursor = 'zoom-out';
+            lightboxZoomed = true;
+          } else {
+            this.style.transform = 'scale(1)';
+            this.style.cursor = 'zoom-in';
+            lightboxZoomed = false;
+          }
+        });
+      }
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    const particleCount = 700;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-
-    const cyanColor = new THREE.Color('#00f2fe');
-    const purpleColor = new THREE.Color('#9d4edd');
-
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 1600;
-      positions[i + 1] = (Math.random() - 0.5) * 1600;
-      positions[i + 2] = (Math.random() - 0.5) * 1600;
-
-      const mixedColor = Math.random() > 0.6 ? purpleColor : cyanColor;
-      colors[i] = mixedColor.r;
-      colors[i + 1] = mixedColor.g;
-      colors[i + 2] = mixedColor.b;
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    const canvasPoint = document.createElement('canvas');
-    canvasPoint.width = 16;
-    canvasPoint.height = 16;
-    const ctxPoint = canvasPoint.getContext('2d');
-    const gradient = ctxPoint.createRadialGradient(8, 8, 0, 8, 8, 8);
-    gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.4, 'rgba(0,242,254,0.8)');
-    gradient.addColorStop(1, 'rgba(0,0,0,0)');
-    ctxPoint.fillStyle = gradient;
-    ctxPoint.fillRect(0, 0, 16, 16);
-
-    const pTexture = new THREE.CanvasTexture(canvasPoint);
-
-    const material = new THREE.PointsMaterial({
-      size: 14,
-      vertexColors: true,
-      map: pTexture,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    });
-
-    const particleSystem = new THREE.Points(geometry, material);
-    scene.add(particleSystem);
-
-    const polyGeo = new THREE.IcosahedronGeometry(380, 1);
-    const polyMat = new THREE.MeshBasicMaterial({
-      color: 0x00f2fe,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.08
-    });
-    const icosahedron = new THREE.Mesh(polyGeo, polyMat);
-    scene.add(icosahedron);
-
-    let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-
-    window.addEventListener('mousemove', e => {
-      mouseX = (e.clientX - windowHalfX) * 0.4;
-      mouseY = (e.clientY - windowHalfY) * 0.4;
-    });
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    function renderThree() {
-      targetX += (mouseX - targetX) * 0.04;
-      targetY += (mouseY - targetY) * 0.04;
-
-      particleSystem.rotation.y += 0.001;
-      particleSystem.rotation.x += 0.0005;
-
-      icosahedron.rotation.y += 0.002;
-      icosahedron.rotation.x += 0.0015;
-
-      camera.position.x += (targetX - camera.position.x) * 0.05;
-      camera.position.y += (-targetY - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-
-      renderer.render(scene, camera);
-      requestAnimationFrame(renderThree);
-    }
-    renderThree();
-
-    document.querySelectorAll('.tilt-card-3d').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = ((y - centerY) / centerY) * -15;
-        const rotateY = ((x - centerX) / centerX) * 15;
-
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.02, 1.02, 1.02)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)';
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('image-lightbox');
+          if (modal && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            lightboxZoomed = false;
+          }
+        }
       });
     });
+
+    // 3D WebGL Background Particle Engine
+    (function runThreeWebGL() {
+      function initEngine() {
+        const container = document.getElementById('three-canvas');
+        if (!container || typeof THREE === 'undefined') return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 2000);
+        camera.position.z = 750;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const particleCount = 850;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        const colorCyan = new THREE.Color('#00f2fe');
+        const colorPurple = new THREE.Color('#9d4edd');
+        const colorBlue = new THREE.Color('#4facfe');
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+          positions[i] = (Math.random() - 0.5) * 1700;
+          positions[i + 1] = (Math.random() - 0.5) * 1700;
+          positions[i + 2] = (Math.random() - 0.5) * 1700;
+
+          const rand = Math.random();
+          const chosen = rand > 0.6 ? colorPurple : (rand > 0.3 ? colorCyan : colorBlue);
+          colors[i] = chosen.r;
+          colors[i + 1] = chosen.g;
+          colors[i + 2] = chosen.b;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const pCanvas = document.createElement('canvas');
+        pCanvas.width = 16;
+        pCanvas.height = 16;
+        const ctx = pCanvas.getContext('2d');
+        const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.4, 'rgba(0,242,254,0.8)');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 16, 16);
+
+        const pTexture = new THREE.CanvasTexture(pCanvas);
+        const pMaterial = new THREE.PointsMaterial({
+          size: 16,
+          vertexColors: true,
+          map: pTexture,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+
+        const particles = new THREE.Points(geometry, pMaterial);
+        scene.add(particles);
+
+        const coreGeo = new THREE.IcosahedronGeometry(380, 1);
+        const coreMat = new THREE.MeshBasicMaterial({
+          color: 0x00f2fe,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.28
+        });
+        const cyberCore = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(cyberCore);
+
+        const ringGeo = new THREE.TorusGeometry(480, 1.5, 16, 100);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0x9d4edd,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.3
+        });
+        const cyberRing = new THREE.Mesh(ringGeo, ringMat);
+        cyberRing.rotation.x = Math.PI / 3;
+        scene.add(cyberRing);
+
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        window.addEventListener('mousemove', function(e) {
+          mouseX = (e.clientX - windowHalfX) * 0.35;
+          mouseY = (e.clientY - windowHalfY) * 0.35;
+        });
+
+        window.addEventListener('resize', function() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        function animate() {
+          requestAnimationFrame(animate);
+
+          targetX += (mouseX - targetX) * 0.035;
+          targetY += (mouseY - targetY) * 0.035;
+
+          particles.rotation.y += 0.0008;
+          particles.rotation.x += 0.0004;
+
+          cyberCore.rotation.y += 0.0018;
+          cyberCore.rotation.x += 0.0012;
+
+          cyberRing.rotation.z += 0.002;
+
+          camera.position.x += (targetX - camera.position.x) * 0.05;
+          camera.position.y += (-targetY - camera.position.y) * 0.05;
+          camera.lookAt(scene.position);
+
+          renderer.render(scene, camera);
+        }
+        animate();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEngine);
+      } else {
+        initEngine();
+      }
+    })();
   </script>
 
 </body>
